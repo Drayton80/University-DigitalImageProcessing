@@ -46,6 +46,8 @@ class Filter:
         else:
             image_operated = image.copy()
 
+        for row in image_operated:
+
 
 
         
