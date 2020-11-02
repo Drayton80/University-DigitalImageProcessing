@@ -32,22 +32,22 @@ class ImageData:
         return self.red, self.green, self.blue
 
     def get_matrix_red(self) -> list:
-        return self._get_matrix_color_channel(0)
+        return self._get_matrix_color_channel(self.red, 0)
 
     def get_matrix_green(self) -> list:
-        return self._get_matrix_color_channel(1)
+        return self._get_matrix_color_channel(self.green, 1)
 
     def get_matrix_blue(self) -> list:
-        return self._get_matrix_color_channel(2)
+        return self._get_matrix_color_channel(self.blue, 2)
     
-    def _get_matrix_color_channel(self, color_channel_index: int) -> list:
+    def _get_matrix_color_channel(self, color_channel: list, color_channel_index: int) -> list:
         matrix = []
         row = []
         # Como cada canal é basicamente uma lista de pixels sem divisão por colunas e linhas
         # é necessário um contador para checar se a linha chegou ao final
         columns_counter = 1
 
-        for pixel in self.image.getdata():
+        for pixel in color_channel:
             row.append(pixel[color_channel_index])
             # Caso o contador chegue no tamanho do numero de colunas 
             # da imagem isso significará que a linha acabou    
@@ -62,16 +62,16 @@ class ImageData:
         
         return matrix
 
-    def get_red_by_matrix(self, matrix: list) -> list:
-        return self._get_channel_color_by_matrix(matrix, 'red')
+    def get_red_from_matrix(self, matrix: list) -> list:
+        return self._get_channel_color_from_matrix(matrix, 'red')
 
-    def get_green_by_matrix(self, matrix: list) -> list:
-        return self._get_channel_color_by_matrix(matrix, 'green')
+    def get_green_from_matrix(self, matrix: list) -> list:
+        return self._get_channel_color_from_matrix(matrix, 'green')
         
-    def get_blue_by_matrix(self, matrix: list) -> list:
-        return self._get_channel_color_by_matrix(matrix, 'blue')
+    def get_blue_from_matrix(self, matrix: list) -> list:
+        return self._get_channel_color_from_matrix(matrix, 'blue')
 
-    def _get_channel_color_by_matrix(self, matrix: list, color_channel: str) -> list:
+    def _get_channel_color_from_matrix(self, matrix: list, color_channel: str) -> list:
         channel_color = []
         # Faz a formatação de cada canal para o estilo de lista de tuplas usado para
         # exibir a imagem (ou salvá-la) com o PIL
@@ -86,11 +86,21 @@ class ImageData:
 
         return channel_color
 
+    def set_rgb_from_matrices(self, red: list, green: list, blue: list) -> None:        
+        self.red = self.get_red_from_matrix(red)
+        self.green = self.get_green_from_matrix(green)
+        self.blue = self.get_blue_from_matrix(blue)
+        self.number_rows = len(red)
+        self.number_columns = len(red[0])
+
     # Salva novas imagens para cada canal de cor (RGB):
-    def save_images_per_channel(self) -> None:
-        # Utiliza expressões regulares para obter apenas o nome da imagem entre
-        # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
-        image_name = re.search(r'(\w*\\)*(.*)\.\w+', self.image_path).group(2)
+    def save_image_per_channel(self, new_file_name='') -> None:
+        if new_file_name == '':
+            # Utiliza expressões regulares para obter apenas o nome da imagem entre
+            # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
+            image_name = re.search(r'(\w*\\)*(.*)\.\w+', self.image_path).group(2)
+        else:
+            image_name = new_file_name
         
         image_red = Image.new('RGB', self.image.size)
         image_red.putdata(self.red)
@@ -103,3 +113,27 @@ class ImageData:
         image_blue = Image.new('RGB', self.image.size)
         image_blue.putdata(self.blue)
         image_blue.save('images/' + image_name + '(B).png')
+
+    def save_image(self, new_file_name='', new_file_name_suffix='') -> None:
+        if new_file_name == '':
+            # Utiliza expressões regulares para obter apenas o nome da imagem entre
+            # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
+            image_name = re.search(r'(\w*\\)*(.*)\.\w+', self.image_path).group(2)
+        else:
+            image_name = new_file_name
+
+        if new_file_name_suffix != '':
+            image_name += new_file_name_suffix
+
+        image_rgb = []
+
+        for pixel_index in range(len(self.red)):
+            image_rgb.append((self.red[pixel_index][0], self.green[pixel_index][1], self.blue[pixel_index][2]))
+
+        image_path = 'images/' + image_name + '.png'
+
+        image = Image.new('RGB', (self.number_columns, self.number_rows))
+        image.putdata(image_rgb)
+        image.save(image_path)
+
+        return image_path

@@ -1,11 +1,205 @@
+import re
+import time
+import argparse
+import numpy as np
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
+from scipy import signal
+from scipy import misc
+
 from ImageData import ImageData
 from Matrix import Matrix
-from Filter import Filter
+from LocalFilter import LocalFilter
 
-image_data = ImageData("images\\triangulo-cores-maxwell.jpg")
+def functionality1():
+    pass
 
-#image_data.green = image_data.get_green_by_matrix(image_data.get_matrix_red())
+def functionality2():
+    pass
 
-image_data.save_images_per_channel()
+def functionality3(image: str, plot):
+    # PARTE 1 - Filtro Média
+    image_data = ImageData("images\\" + image)
+    
+    red_mean   = LocalFilter().apply_mean_filter(image_data.get_matrix_red()  , mask_size=(5,5))
+    green_mean = LocalFilter().apply_mean_filter(image_data.get_matrix_green(), mask_size=(5,5))
+    blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(5,5))
+    
+    image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
+    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media)')
 
-mean_mask = Matrix().get_matrix_from_file("mask\\mean 5x5.txt")
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_mean_path) 
+        plt.imshow(image)
+        plt.show()
+
+    # PARTE 2 - Filtro Sobel
+    sobel_horizontal_mask = Matrix().get_matrix_from_file('mask\\sobel horizontal.txt')
+    red_sobel_horizontal   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_horizontal_mask)
+    green_sobel_horizontal = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_horizontal_mask)
+    blue_sobel_horizontal  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_horizontal_mask)
+
+    image_data.set_rgb_from_matrices(red_sobel_horizontal, green_sobel_horizontal, blue_sobel_horizontal)
+    image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel horizontal)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_sobel_horizontal_path) 
+        plt.imshow(image)
+        plt.show()
+
+    sobel_vertical_mask = Matrix().get_matrix_from_file('mask\\sobel vertical.txt')
+    red_sobel_vertical   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_vertical_mask)
+    green_sobel_vertical = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_vertical_mask)
+    blue_sobel_vertical  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_vertical_mask)
+
+    image_data.set_rgb_from_matrices(red_sobel_vertical, green_sobel_vertical, blue_sobel_vertical)
+    image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel vertical)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_sobel_vertical_path) 
+        plt.imshow(image)
+        plt.show()
+
+
+def functionality4(image: str, plot):
+    # PARTE 1 - Aplicando Matriz 25x25
+    image_data = ImageData("images\\" + image)
+
+    start = time.time()
+    
+    red_mean   = LocalFilter().apply_mean_filter(image_data.get_matrix_red()  , mask_size=(25,25))
+    green_mean = LocalFilter().apply_mean_filter(image_data.get_matrix_green(), mask_size=(25,25))
+    blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(25,25))
+    
+    image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
+    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media 25x25)')
+
+    end = time.time()
+    print(end - start)
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_mean_path) 
+        plt.imshow(image)
+        plt.show()
+
+    image_data = ImageData("images\\" + image)
+
+    # PARTE 2 - Aplicando Matriz 25x1 e depois 1x25
+    start = time.time()
+    
+    red_mean   = LocalFilter().apply_mean_filter(image_data.get_matrix_red()  , mask_size=(25,1))
+    green_mean = LocalFilter().apply_mean_filter(image_data.get_matrix_green(), mask_size=(25,1))
+    blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(25,1))
+    image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
+
+    red_mean   = LocalFilter().apply_mean_filter(image_data.get_matrix_red()  , mask_size=(1,25))
+    green_mean = LocalFilter().apply_mean_filter(image_data.get_matrix_green(), mask_size=(1,25))
+    blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(1,25))
+    image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
+
+    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media 25x1 e 1x25)')
+
+    end = time.time()
+    print(end - start)
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_mean_path) 
+        plt.imshow(image)
+        plt.show()
+
+
+def functionality5(image: str, plot):
+    image_data = ImageData("images\\" + image)
+    
+    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(5,5))
+    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(5,5))
+    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(5,5))
+    
+    image_data.set_rgb_from_matrices(red_median, green_median, blue_median)
+    image_filtered_median_path = image_data.save_image(new_file_name_suffix='(mediana)')
+    
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_median_path) 
+        plt.imshow(image)
+        plt.show()
+
+def functionality6(plot):
+    image_data  = ImageData("images\\baboon.png")
+    image_red   = np.asarray(image_data.get_matrix_red())
+    image_green = np.asarray(image_data.get_matrix_green())
+    image_blue  = np.asarray(image_data.get_matrix_blue())
+
+    pattern_data  = ImageData("images\\babooneye.png")
+    pattern_red   = np.asarray(pattern_data.get_matrix_red())
+    pattern_green = np.asarray(pattern_data.get_matrix_green())
+    pattern_blue  = np.asarray(pattern_data.get_matrix_blue())
+
+    red_correlation   = signal.correlate2d(image_red  , pattern_red  , boundary='symm', mode='same')
+    green_correlation = signal.correlate2d(image_green, pattern_green, boundary='symm', mode='same')
+    blue_correlation  = signal.correlate2d(image_blue , pattern_blue , boundary='symm', mode='same')
+
+    biggest_mean_correlation = 0
+    biggest_mean_correlation_i = 0
+    biggest_mean_correlation_j = 0
+
+    # Checa qual o maior ponto entre a média das correlações entre os canais de cores:
+    for i in range(len(red_correlation)):
+        for j in range(len(red_correlation[0])):
+            #mean = (red_correlation[i][j] + green_correlation[i][j] + blue_correlation[i][j]) / 3
+            mean = red_correlation[i][j]
+            if mean > biggest_mean_correlation:
+                biggest_mean_correlation = mean
+                biggest_mean_correlation_i = i
+                biggest_mean_correlation_j = j
+
+    image = mpimg.imread("images\\baboon.png") 
+    plt.imshow(image)
+    plt.scatter(x=[biggest_mean_correlation_j], y=[biggest_mean_correlation_i], c='g', s=40)
+    plt.show()
+            
+    print(biggest_mean_correlation_i, biggest_mean_correlation_j)
+    #y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
+
+def functionality7(plot):
+    image_data = ImageData("images\\baboon.png")
+    pattern_data = ImageData("images\\babooneye.png")
+
+    pattern_red_channel = pattern_data.get_matrix_red()
+    pattern_green_channel = pattern_data.get_matrix_green()
+    pattern_blue_channel = pattern_data.get_matrix_blue()
+
+    red_correlation   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , pattern_red_channel  )
+    green_correlation = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), pattern_green_channel)
+    blue_correlation  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , pattern_blue_channel )
+
+    image_data.set_rgb_from_matrices(red_correlation, green_correlation, blue_correlation)
+    image_filtered_path = image_data.save_image(new_file_name_suffix='(correlação)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_path) 
+        plt.imshow(image)
+        plt.show()
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-f", "--funcionalidade", required=True, help="quais funcionalidades serão exibidas")
+    ap.add_argument("-i", "--imagem", required=False, help="qual imagem será operada", nargs='?', const="Detran_Minas-Gerais.jpg")
+    ap.add_argument("-pl", "--plot", required=False, help="se a imagem será plotada", nargs='?', const=True)
+
+    args = vars(ap.parse_args())
+
+    # Inicializa o servido da aplicação:
+    if args["funcionalidade"] == "all":
+        pass
+    elif args["funcionalidade"] == "3":
+        functionality3(args["imagem"], args["plot"])
+    elif args["funcionalidade"] == "4":
+        functionality4(args["imagem"], args["plot"])
+    elif args["funcionalidade"] == "5":
+        functionality5(args["imagem"], args["plot"])
+    elif args["funcionalidade"] == "6":
+        functionality6(args["plot"])
+    elif args["funcionalidade"] == "7":
+        functionality7(args["plot"])
