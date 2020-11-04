@@ -9,11 +9,23 @@ from scipy import signal
 from scipy import misc
 
 from ImageData import ImageData
+from Converter import Converter
 from Matrix import Matrix
 from LocalFilter import LocalFilter
 
-def functionality1():
-    pass
+def functionality1(image: str, plot):
+    image_data = ImageData("images\\" + image)
+
+    y, i, q = Converter().rgb_to_yiq(image_data.get_matrix_red(), image_data.get_matrix_green(), image_data.get_matrix_blue())
+    r, g, b = Converter().yiq_to_rgb(y, i, q)
+
+    image_data.set_rgb_from_matrices(r, g, b)
+    new_image_path = image_data.save_image(new_file_name_suffix='(rgb-yiq-rgb)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(new_image_path) 
+        plt.imshow(image)
+        plt.show()
 
 def functionality2():
     pass
@@ -193,6 +205,8 @@ if __name__ == '__main__':
     # Inicializa o servido da aplicação:
     if args["funcionalidade"] == "all":
         pass
+    elif args["funcionalidade"] == "1":
+        functionality1(args["imagem"], args["plot"])
     elif args["funcionalidade"] == "3":
         functionality3(args["imagem"], args["plot"])
     elif args["funcionalidade"] == "4":
