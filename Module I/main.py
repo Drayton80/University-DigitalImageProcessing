@@ -6,12 +6,14 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
 from scipy import signal
-from scipy import misc
+from sklearn.preprocessing import normalize
 
 from ImageData import ImageData
 from Converter import Converter
 from Matrix import Matrix
+from PointFilter import PointFilter
 from LocalFilter import LocalFilter
+
 
 def functionality1(image: str, plot):
     image_data = ImageData("images\\" + image)
@@ -27,8 +29,41 @@ def functionality1(image: str, plot):
         plt.imshow(image)
         plt.show()
 
-def functionality2():
-    pass
+
+def functionality2(image: str, plot):
+    # PARTE 1 - Negativo em RGB Banda a Banda
+    image_data = ImageData("images\\" + image)
+
+    r_negative = PointFilter().apply_negative(image_data.get_matrix_red())
+    g_negative = PointFilter().apply_negative(image_data.get_matrix_green())
+    b_negative = PointFilter().apply_negative(image_data.get_matrix_blue())
+
+    image_data.set_rgb_from_matrices(r_negative, g_negative, b_negative)
+    new_image_path = image_data.save_image(new_file_name_suffix='(negative-rgb)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(new_image_path) 
+        plt.imshow(image)
+        plt.show()
+
+    # PARTE 2 - Negativo em Y
+    image_data = ImageData("images\\" + image)
+
+    y, i, q = Converter().rgb_to_yiq(image_data.get_matrix_red(), image_data.get_matrix_green(), image_data.get_matrix_blue())
+
+    max_value_y = 0.299*255 + 0.587*255 + 0.114*255
+    y_negative = PointFilter().apply_negative(y, max_component_value=max_value_y)
+
+    r, g, b = Converter().yiq_to_rgb(y_negative, i, q)
+
+    image_data.set_rgb_from_matrices(r, g, b)
+    new_image_path = image_data.save_image(new_file_name_suffix='(negative-y)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(new_image_path) 
+        plt.imshow(image)
+        plt.show()
+    
 
 def functionality3(image: str, plot):
     # PARTE 1 - Filtro Média
@@ -137,40 +172,29 @@ def functionality5(image: str, plot):
         plt.show()
 
 def functionality6(plot):
-    image_data  = ImageData("images\\baboon.png")
-    image_red   = np.asarray(image_data.get_matrix_red())
-    image_green = np.asarray(image_data.get_matrix_green())
-    image_blue  = np.asarray(image_data.get_matrix_blue())
+    image_data = ImageData("images\\grito-edvard-munch.jpg")
+    image_red_normalized   = normalize( np.asmatrix(np.asarray(image_data.get_matrix_red()))   , norm='l1')
+    image_green_normalized = normalize( np.asmatrix(np.asarray(image_data.get_matrix_green())) , norm='l1')
+    image_blue_normalized  = normalize( np.asmatrix(np.asarray(image_data.get_matrix_blue()))  , norm='l1')
 
-    pattern_data  = ImageData("images\\babooneye.png")
-    pattern_red   = np.asarray(pattern_data.get_matrix_red())
-    pattern_green = np.asarray(pattern_data.get_matrix_green())
-    pattern_blue  = np.asarray(pattern_data.get_matrix_blue())
+    pattern_data = ImageData("images\\grito-edvard-munch-cabeca.jpg")
+    pattern_red_normalized   = normalize( np.asmatrix(np.asarray(pattern_data.get_matrix_red()))   , norm='l1')
+    pattern_green_normalized = normalize( np.asmatrix(np.asarray(pattern_data.get_matrix_green())) , norm='l1')
+    pattern_blue_normalized  = normalize( np.asmatrix(np.asarray(pattern_data.get_matrix_blue()))  , norm='l1')
 
-    red_correlation   = signal.correlate2d(image_red  , pattern_red  , boundary='symm', mode='same')
-    green_correlation = signal.correlate2d(image_green, pattern_green, boundary='symm', mode='same')
-    blue_correlation  = signal.correlate2d(image_blue , pattern_blue , boundary='symm', mode='same')
+    red_correlation   = signal.correlate2d(image_red_normalized  , pattern_red_normalized  , boundary='fill', mode='same')
+    green_correlation = signal.correlate2d(image_green_normalized, pattern_green_normalized, boundary='fill', mode='same')
+    blue_correlation  = signal.correlate2d(image_blue_normalized , pattern_blue_normalized , boundary='fill', mode='same')
 
-    biggest_mean_correlation = 0
-    biggest_mean_correlation_i = 0
-    biggest_mean_correlation_j = 0
+    mean_correlation = (red_correlation + green_correlation + blue_correlation) / 3
 
-    # Checa qual o maior ponto entre a média das correlações entre os canais de cores:
-    for i in range(len(red_correlation)):
-        for j in range(len(red_correlation[0])):
-            #mean = (red_correlation[i][j] + green_correlation[i][j] + blue_correlation[i][j]) / 3
-            mean = red_correlation[i][j]
-            if mean > biggest_mean_correlation:
-                biggest_mean_correlation = mean
-                biggest_mean_correlation_i = i
-                biggest_mean_correlation_j = j
+    biggest_correlation_positions = np.where(mean_correlation == mean_correlation.max())
+    rows_positions, cols_positions = biggest_correlation_positions
 
     image = mpimg.imread("images\\baboon.png") 
-    plt.imshow(image)
-    plt.scatter(x=[biggest_mean_correlation_j], y=[biggest_mean_correlation_i], c='g', s=40)
+    plt.imshow(mean_correlation, cmap='gray')
+    plt.scatter(x=cols_positions, y=rows_positions, c='g', s=40)
     plt.show()
-            
-    print(biggest_mean_correlation_i, biggest_mean_correlation_j)
     #y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
 
 def functionality7(plot):
@@ -207,6 +231,8 @@ if __name__ == '__main__':
         pass
     elif args["funcionalidade"] == "1":
         functionality1(args["imagem"], args["plot"])
+    elif args["funcionalidade"] == "2":
+        functionality2(args["imagem"], args["plot"])
     elif args["funcionalidade"] == "3":
         functionality3(args["imagem"], args["plot"])
     elif args["funcionalidade"] == "4":
