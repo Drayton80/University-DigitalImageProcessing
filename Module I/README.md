@@ -310,7 +310,7 @@ E a máscara de detecção vertical:
 -1  0  1
 ```
 
-Os usos desse filtro são feitos na `main` através da função de nome `functionality3`, sendo ele aplicado das seguintes formas:
+Os usos desse filtro são feitos na `main` em uma segunda parte da função `functionality3`:
 
 ``` python 
     [...]
@@ -366,6 +366,25 @@ def apply_median_filter(self, image: list, mask_size=(3,3), zero_padding=True) -
         filtered_image.append(filtered_image_row)
     
     return filtered_image
+```
+
+Esse filtro é utilizado internamente na `main` através da função cujo nome é `functionality5`:
+
+``` python 
+def functionality5(image_name: str, plot):
+    image_data = ImageData("images\\" + image_name)
+    
+    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(5,5))
+    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(5,5))
+    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(5,5))
+    
+    image_data.set_rgb_from_matrices(red_median, green_median, blue_median)
+    image_filtered_median_path = image_data.save_image(new_file_name_suffix='(mediana)')
+    
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_median_path) 
+        plt.imshow(image)
+        plt.show()
 ```
 
 ### Busca de um Padrão em uma Imagem
