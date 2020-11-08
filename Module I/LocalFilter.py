@@ -1,7 +1,9 @@
 from Matrix import Matrix
 
 class LocalFilter:
-    def _zero_extension(self, image: list, mask_number_rows: int, mask_number_columns: int) -> list:
+    def zero_padding(self, image: list, mask_size: tuple) -> list:
+        mask_number_rows = mask_size[0]
+        mask_number_columns = mask_size[1]
         # Garante que a imagem original não seja alterada na operação de extensão por zeros:
         image_extended = image.copy()
         
@@ -25,7 +27,7 @@ class LocalFilter:
 
         return image_extended
 
-    def _get_matrix_of_all_local_matrices(self, image: list, mask_size: tuple) -> list:
+    def get_matrix_of_all_local_matrices(self, image: list, mask_size: tuple) -> list:
         mask_number_rows = mask_size[0]
         mask_number_columns = mask_size[1]
 
@@ -71,19 +73,19 @@ class LocalFilter:
 
         return result
     
-    def apply_median_filter(self, image: list, mask_size=(3,3), zero_extension=True):
+    def apply_median_filter(self, image: list, mask_size=(3,3), zero_padding=True) -> list:
         # Se as dimensões da máscara forem maiores que a imagem o método para:
         if mask_size[0] > len(image) or mask_size[1] > len(image[0]):
             return
 
-        if zero_extension:
-            image_operated = self._zero_extension(image, mask_size[0], mask_size[1])
+        if zero_padding:
+            image_operated = self.zero_padding(image, (mask_size[0], mask_size[1]))
         else:
             image_operated = image.copy()
 
         filtered_image = []
 
-        for row_of_local_matrices in self._get_matrix_of_all_local_matrices(image_operated, (mask_size[0], mask_size[1])):
+        for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (mask_size[0], mask_size[1])):
             filtered_image_row = []
             for local_matrix in row_of_local_matrices:
                 filtered_image_row.append(Matrix().get_median_from_matrix(local_matrix))
@@ -93,28 +95,28 @@ class LocalFilter:
         return filtered_image
 
 
-    def apply_mean_filter(self, image: list, mask_size=(3,3), zero_extension=True):
+    def apply_mean_filter(self, image: list, mask_size=(3,3), zero_padding=True) -> list:
         mean_divider = 1 / (mask_size[0] * mask_size[1])
         mean_mask = []
 
         for _ in range(mask_size[0]):
             mean_mask.append([mean_divider for _ in range(mask_size[1])])
 
-        return self.apply_generic_filter(image, mean_mask, zero_extension=zero_extension)
+        return self.apply_generic_filter(image, mean_mask, zero_padding=zero_padding)
 
-    def apply_generic_filter(self, image: list, mask: list, zero_extension=True):
+    def apply_generic_filter(self, image: list, mask: list, zero_padding=True) -> list:
         # Se as dimensões da máscara forem maiores que a imagem o método para:
         if len(mask) > len(image) or len(mask[0]) > len(image[0]):
             return
 
-        if zero_extension:
-            image_operated = self._zero_extension(image, len(mask), len(mask[0]))
+        if zero_padding:
+            image_operated = self.zero_padding(image, (len(mask), len(mask[0])))
         else:
             image_operated = image.copy()
 
         filtered_image = []
 
-        for row_of_local_matrices in self._get_matrix_of_all_local_matrices(image_operated, (len(mask), len(mask[0]))):
+        for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (len(mask), len(mask[0]))):
             correlations_row = []
 
             for local_matrix in row_of_local_matrices:

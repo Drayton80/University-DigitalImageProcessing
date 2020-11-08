@@ -47,9 +47,9 @@ class Converter:
                 g = round(1.0*y_channel[i][j] - 0.272*i_channel[i][j] - 0.647*q_channel[i][j])
                 b = round(1.0*y_channel[i][j] - 1.106*i_channel[i][j] + 1.703*q_channel[i][j])
 
-                r_channel_row.append(self._truncate_values_outside_limits(r))
-                g_channel_row.append(self._truncate_values_outside_limits(g))
-                b_channel_row.append(self._truncate_values_outside_limits(b))
+                r_channel_row.append(self._truncate_values_outside_limits(r, min_value=0, max_value=255))
+                g_channel_row.append(self._truncate_values_outside_limits(g, min_value=0, max_value=255))
+                b_channel_row.append(self._truncate_values_outside_limits(b, min_value=0, max_value=255))
                 
             r_channel.append(r_channel_row)
             g_channel.append(g_channel_row)

@@ -1,14 +1,14 @@
 class PointFilter:
-    def apply_negative(self, image: list, max_component_value=255) -> list:
-        filtered_image = []
+    def apply_negative(self, channel: list, max_pixel_value=255) -> list:
+        filtered_channel = []
         
-        for row in image:
-            filtered_image_row = []
+        for row in channel:
+            filtered_channel_row = []
 
             for pixel_value in row:
-                filtered_image_row.append(max_component_value - pixel_value)
+                filtered_channel_row.append(max_pixel_value - pixel_value)
 
-            filtered_image.append(filtered_image_row)
+            filtered_channel.append(filtered_channel_row)
 
-        return filtered_image
+        return filtered_channel
 
