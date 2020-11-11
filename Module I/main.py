@@ -173,37 +173,57 @@ def functionality5(image_name: str, plot):
         plt.show()
 
 def functionality6(image_name, pattern_name, plot):    
-    image_data  = ImageData("images\\" + image_name)
-    image_red_normalized   = normalize( np.asmatrix(image_data.get_matrix_red())   , norm='l2')
-    image_green_normalized = normalize( np.asmatrix(image_data.get_matrix_green()) , norm='l2')
-    image_blue_normalized  = normalize( np.asmatrix(image_data.get_matrix_blue())  , norm='l2')
-
     pattern_data  = ImageData("images\\" + pattern_name)
     pattern_red_normalized   = normalize( np.asmatrix(pattern_data.get_matrix_red())   , norm='l2')  
     pattern_green_normalized = normalize( np.asmatrix(pattern_data.get_matrix_green()) , norm='l2')  
     pattern_blue_normalized  = normalize( np.asmatrix(pattern_data.get_matrix_blue())  , norm='l2')  
-    
-    red_cross_correlation   = signal.correlate2d(image_red_normalized  , pattern_red_normalized  , boundary='fill', mode='same')
-    green_cross_correlation = signal.correlate2d(image_green_normalized, pattern_green_normalized, boundary='fill', mode='same')
-    blue_cross_correlation  = signal.correlate2d(image_blue_normalized , pattern_blue_normalized , boundary='fill', mode='same')
-    mean_cross_correlation = (red_cross_correlation + green_cross_correlation + blue_cross_correlation) / 3
 
-    biggest_red_correlation_positions = np.where(red_cross_correlation == red_cross_correlation.max())
-    red_row_center = biggest_red_correlation_positions[0][0]
-    red_col_center = biggest_red_correlation_positions[1][0]
+    image_data  = ImageData("images\\" + image_name)
+    image_red   = LocalFilter().zero_padding(image_data.get_matrix_red()  , pattern_red_normalized.shape  )
+    image_green = LocalFilter().zero_padding(image_data.get_matrix_green(), pattern_green_normalized.shape)
+    image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , pattern_blue_normalized.shape )
 
-    biggest_green_correlation_positions = np.where(green_cross_correlation == green_cross_correlation.max())
-    green_row_center = biggest_green_correlation_positions[0][0]
-    green_col_center = biggest_green_correlation_positions[1][0]
+    mean_cross_correlation = []
+    for i in range(image_data.number_rows):
+        if i + pattern_data.number_rows > image_data.number_rows:
+            break
+        mean_cross_correlation_row = []
+        for j in range(image_data.number_columns):
+            if j + pattern_data.number_columns > image_data.number_columns:
+                break
+            # Gera a matriz local de cada canal:
+            red_local_matrix   = []
+            green_local_matrix = []
+            blue_local_matrix  = []
+            for local_i in range(pattern_data.number_rows):
+                red_local_matrix_row   = []
+                green_local_matrix_row = []
+                blue_local_matrix_row  = []
 
-    biggest_blue_correlation_positions = np.where(blue_cross_correlation == blue_cross_correlation.max())
-    blue_row_center = biggest_blue_correlation_positions[0][0]
-    blue_col_center = biggest_blue_correlation_positions[1][0]
+                for local_j in range(pattern_data.number_columns):
+                    red_local_matrix_row.append(image_red[i+local_i][j+local_j])
+                    green_local_matrix_row.append(image_green[i+local_i][j+local_j])
+                    blue_local_matrix_row.append(image_blue[i+local_i][j+local_j])
+
+                red_local_matrix.append(red_local_matrix_row)
+                green_local_matrix.append(green_local_matrix_row)
+                blue_local_matrix.append(blue_local_matrix_row)
+
+            image_red_local_normalized   = normalize(np.asmatrix(red_local_matrix)  , norm='l2')
+            image_green_local_normalized = normalize(np.asmatrix(green_local_matrix), norm='l2')
+            image_blue_local_normalized  = normalize(np.asmatrix(blue_local_matrix) , norm='l2')
+
+            red_correlation   = signal.correlate2d(image_red_local_normalized  , pattern_red_normalized  , boundary='symm', mode='valid')[0][0]
+            green_correlation = signal.correlate2d(image_green_local_normalized, pattern_green_normalized, boundary='symm', mode='valid')[0][0]
+            blue_correlation  = signal.correlate2d(image_blue_local_normalized , pattern_blue_normalized , boundary='symm', mode='valid')[0][0]
+
+            mean_cross_correlation_row.append((red_correlation + green_correlation + blue_correlation)/3)
+        mean_cross_correlation.append(mean_cross_correlation_row)
+    mean_cross_correlation = np.asmatrix(mean_cross_correlation)
 
     biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
     mean_row_center = biggest_mean_correlation_positions[0][0]
     mean_col_center = biggest_mean_correlation_positions[1][0]
-    
 
     plt.imshow(mean_cross_correlation, cmap='gray')
     plt.show()
@@ -211,10 +231,8 @@ def functionality6(image_name, pattern_name, plot):
     image = mpimg.imread("images\\" + image_name) 
     plt.imshow(image)
     dot_rectangle_plot((mean_col_center, mean_row_center)  , (pattern_data.number_columns, pattern_data.number_rows), color='white', size=25)
-    #dot_rectangle_plot((red_col_center, red_row_center)    , (pattern_data.number_columns, pattern_data.number_rows), color='red'  )
-    #dot_rectangle_plot((green_col_center, green_row_center), (pattern_data.number_columns, pattern_data.number_rows), color='green')
-    #dot_rectangle_plot((blue_col_center, blue_row_center)  , (pattern_data.number_columns, pattern_data.number_rows), color='blue' )
     plt.show()
+        
 
 def functionality7(image_name, pattern_name, plot):
     image_data = ImageData("images\\" + image_name)

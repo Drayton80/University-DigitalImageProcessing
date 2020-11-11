@@ -1,9 +1,4 @@
-import numpy as np
-
-from scipy import signal
-from sklearn.preprocessing import normalize
-
-
+'''
 m1 = np.asmatrix(np.array([[0, 2, 1, 2],
                            [1, 4, 2, 0],
                            [3, 3, 0, 1]]))
@@ -55,8 +50,6 @@ plt.imshow(mpimg.imread("images\\" + image_name))
 plt.scatter(x=cols_positions, y=rows_positions, c='g', s=6)
 plt.show()
    
-   
-'''
 max_possible_pixel_value = 255
 
     pattern_data  = ImageData("images\\" + pattern_name)
@@ -155,3 +148,46 @@ m2_minus_u2 = np.subtract(m2, u2)
 r2 = m2_minus_u2 / np.linalg.norm(m2_minus_u2)
 # Inner Product entre r1 e r2
 r = np.inner(r1, r2)'''
+'''
+ image_data  = ImageData("images\\" + image_name)
+    image_red_normalized   = normalize( np.asmatrix(image_data.get_matrix_red())   , norm='l2')
+    image_green_normalized = normalize( np.asmatrix(image_data.get_matrix_green()) , norm='l2')
+    image_blue_normalized  = normalize( np.asmatrix(image_data.get_matrix_blue())  , norm='l2')
+
+    pattern_data  = ImageData("images\\" + pattern_name)
+    pattern_red_normalized   = normalize( np.asmatrix(pattern_data.get_matrix_red())   , norm='l2')  
+    pattern_green_normalized = normalize( np.asmatrix(pattern_data.get_matrix_green()) , norm='l2')  
+    pattern_blue_normalized  = normalize( np.asmatrix(pattern_data.get_matrix_blue())  , norm='l2')  
+    
+    red_cross_correlation   = signal.correlate2d(image_red_normalized  , pattern_red_normalized  , boundary='fill', mode='same')
+    green_cross_correlation = signal.correlate2d(image_green_normalized, pattern_green_normalized, boundary='fill', mode='same')
+    blue_cross_correlation  = signal.correlate2d(image_blue_normalized , pattern_blue_normalized , boundary='fill', mode='same')
+    mean_cross_correlation = (red_cross_correlation + green_cross_correlation + blue_cross_correlation) / 3
+
+    biggest_red_correlation_positions = np.where(red_cross_correlation == red_cross_correlation.max())
+    red_row_center = biggest_red_correlation_positions[0][0]
+    red_col_center = biggest_red_correlation_positions[1][0]
+
+    biggest_green_correlation_positions = np.where(green_cross_correlation == green_cross_correlation.max())
+    green_row_center = biggest_green_correlation_positions[0][0]
+    green_col_center = biggest_green_correlation_positions[1][0]
+
+    biggest_blue_correlation_positions = np.where(blue_cross_correlation == blue_cross_correlation.max())
+    blue_row_center = biggest_blue_correlation_positions[0][0]
+    blue_col_center = biggest_blue_correlation_positions[1][0]
+
+    biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
+    mean_row_center = biggest_mean_correlation_positions[0][0]
+    mean_col_center = biggest_mean_correlation_positions[1][0]
+    
+
+    plt.imshow(mean_cross_correlation, cmap='gray')
+    plt.show()
+
+    image = mpimg.imread("images\\" + image_name) 
+    plt.imshow(image)
+    dot_rectangle_plot((mean_col_center, mean_row_center)  , (pattern_data.number_columns, pattern_data.number_rows), color='white', size=25)
+    #dot_rectangle_plot((red_col_center, red_row_center)    , (pattern_data.number_columns, pattern_data.number_rows), color='red'  )
+    #dot_rectangle_plot((green_col_center, green_row_center), (pattern_data.number_columns, pattern_data.number_rows), color='green')
+    #dot_rectangle_plot((blue_col_center, blue_row_center)  , (pattern_data.number_columns, pattern_data.number_rows), color='blue' )
+    plt.show()'''

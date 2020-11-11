@@ -189,8 +189,81 @@ def correlation(self, matrix1: list, matrix2: list) -> float:
     return result
 ```
 
+### Filtro de Sobel
+O filtro de sobel é uma operação unária e local que tem como objetivo detectar contornos em uma imagem através de duas máscaras, uma para perceber os contornos horizontais e a outra para os verticais. A aplicação de tal filtro no sistema é feito internamente a classe `LocalFilter` com a utilização do método:
+``` python
+def apply_generic_filter(self, image: list, mask: list, zero_padding=True) -> list:
+    # Se as dimensões da máscara forem maiores que a imagem o método para:
+    if len(mask) > len(image) or len(mask[0]) > len(image[0]):
+        return
+
+    if zero_padding:
+        image_operated = self.zero_padding(image, (len(mask), len(mask[0])))
+    else:
+        image_operated = image.copy()
+
+    filtered_image = []
+
+    for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (len(mask), len(mask[0]))):
+        correlations_row = []
+
+        for local_matrix in row_of_local_matrices:
+            correlations_row.append(round(self.correlation(local_matrix, mask)))
+
+        filtered_image.append(correlations_row)
+    
+    return filtered_image
+```
+Em conjunto com as máscaras horizontal e vertical de sobel que são extraídas de um arquivo txt. 
+
+Sendo a máscara de detecção horizontal:
+```
+ 1  2  1
+ 0  0  0
+-1 -2 -1 
+```
+E a máscara de detecção vertical:
+```
+-1  0  1
+-2  0  2
+-1  0  1
+```
+
+Os usos desse filtro são feitos dentro da `main` na segunda parte da função `functionality3`, a qual tem como objetivo testar a correlação utilizando tanto esse filtro quanto o da média, que será descrita no próximo item.
+
+``` python 
+    [...]
+
+    # PARTE 2 - Filtro Sobel
+    sobel_horizontal_mask = Matrix().get_matrix_from_file('mask\\sobel horizontal.txt')
+    red_sobel_horizontal   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_horizontal_mask)
+    green_sobel_horizontal = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_horizontal_mask)
+    blue_sobel_horizontal  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_horizontal_mask)
+
+    image_data.set_rgb_from_matrices(red_sobel_horizontal, green_sobel_horizontal, blue_sobel_horizontal)
+    image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel horizontal)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_sobel_horizontal_path) 
+        plt.imshow(image)
+        plt.show()
+
+    sobel_vertical_mask = Matrix().get_matrix_from_file('mask\\sobel vertical.txt')
+    red_sobel_vertical   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_vertical_mask)
+    green_sobel_vertical = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_vertical_mask)
+    blue_sobel_vertical  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_vertical_mask)
+
+    image_data.set_rgb_from_matrices(red_sobel_vertical, green_sobel_vertical, blue_sobel_vertical)
+    image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel vertical)')
+
+    if not plot in ["False", "false", False]:
+        image = mpimg.imread(image_filtered_sobel_vertical_path) 
+        plt.imshow(image)
+        plt.show()
+```
+
 ### Filtro da Média
-O filtro da média também é uma operação local, mas seu efeito é o de borrar a imagem original dependendo do tamanho da máscara. A máscara da média é dada por uma matriz de elementos cujo valor é 1 sobre o total de elementos da matriz (nº de linhas vezes nº de colunas) e quanto maior for esse total, mais borrada será a imagem resultante. Há duas formas de utilizar tal filtro pelo código, a primeira é utilizar o método descrito no item anterior em conjunto com a máscara da média extraida de um arquivo txt, já a segunda consiste en utilizar o método abaixo localizado na `LocalFilter` que automaticamente já produz a máscara baseado nas dimensões dela fornecidas como parâmetro:
+O filtro da média também é uma operação local, mas seu efeito consiste em borrar a imagem original dependendo do tamanho da máscara. A máscara da média é dada por uma matriz de elementos cujo valor é 1 sobre o total de elementos da matriz (nº de linhas vezes nº de colunas) e quanto maior for esse total, mais borrada será a imagem resultante. Há duas formas de utilizar tal filtro pelo código, a primeira é utilizar o método descrito no item anterior em conjunto com a máscara da média extraida de um arquivo txt, já a segunda consiste en utilizar o método abaixo localizado na `LocalFilter` que automaticamente já produz a máscara baseado nas dimensões dela fornecidas como parâmetro:
 ``` python
 def apply_mean_filter(self, image: list, mask_size=(3,3), zero_padding=True) -> list:
     mean_divider = 1 / (mask_size[0] * mask_size[1])
@@ -266,79 +339,6 @@ def functionality4(image_name: str, plot):
 
     if not plot in ["False", "false", False]:
         image = mpimg.imread(image_filtered_mean_path) 
-        plt.imshow(image)
-        plt.show()
-```
-
-### Filtro de Sobel
-O filtro de sobel é uma operação unária e local que tem como objetivo de detectar contornos em uma imagem através de uma máscara que pode ser usada para detectar contornos horizontais e outras para verticais. A aplicação de tal filtro no sistema é feito internamente a classe `LocalFilter` com a utilização do método:
-``` python
-def apply_generic_filter(self, image: list, mask: list, zero_padding=True) -> list:
-    # Se as dimensões da máscara forem maiores que a imagem o método para:
-    if len(mask) > len(image) or len(mask[0]) > len(image[0]):
-        return
-
-    if zero_padding:
-        image_operated = self.zero_padding(image, (len(mask), len(mask[0])))
-    else:
-        image_operated = image.copy()
-
-    filtered_image = []
-
-    for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (len(mask), len(mask[0]))):
-        correlations_row = []
-
-        for local_matrix in row_of_local_matrices:
-            correlations_row.append(round(self.correlation(local_matrix, mask)))
-
-        filtered_image.append(correlations_row)
-    
-    return filtered_image
-```
-Em conjunto com ambas as máscaras horizontal e vertical de sobel que são extraídas de um arquivo .txt, onde estão armazenadas. 
-
-Sendo a máscara de detecção horizontal:
-```
- 1  2  1
- 0  0  0
--1 -2 -1 
-```
-E a máscara de detecção vertical:
-```
--1  0  1
--2  0  2
--1  0  1
-```
-
-Os usos desse filtro são feitos na `main` em uma segunda parte da função `functionality3`:
-
-``` python 
-    [...]
-
-    # PARTE 2 - Filtro Sobel
-    sobel_horizontal_mask = Matrix().get_matrix_from_file('mask\\sobel horizontal.txt')
-    red_sobel_horizontal   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_horizontal_mask)
-    green_sobel_horizontal = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_horizontal_mask)
-    blue_sobel_horizontal  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_horizontal_mask)
-
-    image_data.set_rgb_from_matrices(red_sobel_horizontal, green_sobel_horizontal, blue_sobel_horizontal)
-    image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel horizontal)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_sobel_horizontal_path) 
-        plt.imshow(image)
-        plt.show()
-
-    sobel_vertical_mask = Matrix().get_matrix_from_file('mask\\sobel vertical.txt')
-    red_sobel_vertical   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_vertical_mask)
-    green_sobel_vertical = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_vertical_mask)
-    blue_sobel_vertical  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_vertical_mask)
-
-    image_data.set_rgb_from_matrices(red_sobel_vertical, green_sobel_vertical, blue_sobel_vertical)
-    image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel vertical)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_sobel_vertical_path) 
         plt.imshow(image)
         plt.show()
 ```
