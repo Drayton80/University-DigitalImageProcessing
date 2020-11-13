@@ -358,7 +358,7 @@ def apply_median_filter(self, image: list, mask_size=(3,3), zero_padding=True) -
 
     filtered_image = []
 
-    for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (mask_size[0], mask_size[1])):
+    for row_of_local_matrices in self.get_matrix_of_all_local_matrices(image_operated, (mask_size[0], mask_size[1]):
         filtered_image_row = []
         for local_matrix in row_of_local_matrices:
             filtered_image_row.append(Matrix().get_median_from_matrix(local_matrix))

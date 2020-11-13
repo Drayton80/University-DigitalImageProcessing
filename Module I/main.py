@@ -6,7 +6,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-from progress.bar import Bar
+from tqdm import tqdm
 from scipy import signal
 from sklearn.preprocessing import normalize
 
@@ -184,17 +184,14 @@ def functionality6(image_name, pattern_name, plot):
     image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , pattern_blue_normalized.shape )
 
     mean_cross_correlation = []
-    for i in range(image_data.number_rows):
-        if i + pattern_data.number_rows > image_data.number_rows:
-            break
+    # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
+    for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
         mean_cross_correlation_row = []
-        for j in range(image_data.number_columns):
-            if j + pattern_data.number_columns > image_data.number_columns:
-                break
-            # Gera a matriz local de cada canal:
+        for j in range(image_data.number_columns - pattern_data.number_columns):
             red_local_matrix   = []
             green_local_matrix = []
             blue_local_matrix  = []
+            # Geração da matriz local de cada canal:
             for local_i in range(pattern_data.number_rows):
                 red_local_matrix_row   = []
                 green_local_matrix_row = []
@@ -208,55 +205,94 @@ def functionality6(image_name, pattern_name, plot):
                 red_local_matrix.append(red_local_matrix_row)
                 green_local_matrix.append(green_local_matrix_row)
                 blue_local_matrix.append(blue_local_matrix_row)
-
+            # Normalização das matrizes locais:
             image_red_local_normalized   = normalize(np.asmatrix(red_local_matrix)  , norm='l2')
             image_green_local_normalized = normalize(np.asmatrix(green_local_matrix), norm='l2')
             image_blue_local_normalized  = normalize(np.asmatrix(blue_local_matrix) , norm='l2')
-
+            # Correlação:
             red_correlation   = signal.correlate2d(image_red_local_normalized  , pattern_red_normalized  , boundary='symm', mode='valid')[0][0]
             green_correlation = signal.correlate2d(image_green_local_normalized, pattern_green_normalized, boundary='symm', mode='valid')[0][0]
             blue_correlation  = signal.correlate2d(image_blue_local_normalized , pattern_blue_normalized , boundary='symm', mode='valid')[0][0]
 
             mean_cross_correlation_row.append((red_correlation + green_correlation + blue_correlation)/3)
+
         mean_cross_correlation.append(mean_cross_correlation_row)
+
     mean_cross_correlation = np.asmatrix(mean_cross_correlation)
 
     biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
     mean_row_center = biggest_mean_correlation_positions[0][0]
     mean_col_center = biggest_mean_correlation_positions[1][0]
 
-    plt.imshow(mean_cross_correlation, cmap='gray')
-    plt.show()
+    if not plot in ["False", "false", False]:
+        plt.imshow(mean_cross_correlation, cmap='gray')
+        plt.show()
 
-    image = mpimg.imread("images\\" + image_name) 
-    plt.imshow(image)
-    dot_rectangle_plot((mean_col_center, mean_row_center)  , (pattern_data.number_columns, pattern_data.number_rows), color='white', size=25)
-    plt.show()
+        image = mpimg.imread("images\\" + image_name) 
+        plt.imshow(image)
+        dot_rectangle_plot((mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows))
+        plt.show()
         
 
 def functionality7(image_name, pattern_name, plot):
-    image_data = ImageData("images\\" + image_name)
-    pattern_data = ImageData("images\\" + pattern_name)
+    pattern_data  = ImageData("images\\" + pattern_name)
+    pattern_red_normalized   = normalize( np.asmatrix(pattern_data.get_matrix_red())   , norm='l2')  
+    pattern_green_normalized = normalize( np.asmatrix(pattern_data.get_matrix_green()) , norm='l2')  
+    pattern_blue_normalized  = normalize( np.asmatrix(pattern_data.get_matrix_blue())  , norm='l2')  
 
-    pattern_red_channel = pattern_data.get_matrix_red()
-    pattern_green_channel = pattern_data.get_matrix_green()
-    pattern_blue_channel = pattern_data.get_matrix_blue()
+    image_data  = ImageData("images\\" + image_name)
+    image_red   = LocalFilter().zero_padding(image_data.get_matrix_red()  , pattern_red_normalized.shape  )
+    image_green = LocalFilter().zero_padding(image_data.get_matrix_green(), pattern_green_normalized.shape)
+    image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , pattern_blue_normalized.shape )
 
-    red_correlation   = np.asmatrix(LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , pattern_red_channel  ))
-    green_correlation = np.asmatrix(LocalFilter().apply_generic_filter(image_data.get_matrix_green(), pattern_green_channel))
-    blue_correlation  = np.asmatrix(LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , pattern_blue_channel ))
+    mean_cross_correlation = []
+    # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
+    for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
+        mean_cross_correlation_row = []
+        for j in range(image_data.number_columns - pattern_data.number_columns):
+            red_local_matrix   = []
+            green_local_matrix = []
+            blue_local_matrix  = []
+            # Geração da matriz local de cada canal:
+            for local_i in range(pattern_data.number_rows):
+                red_local_matrix_row   = []
+                green_local_matrix_row = []
+                blue_local_matrix_row  = []
 
-    mean_correlation_matrix = (red_correlation + green_correlation + blue_correlation) / 3
-    biggest_correlation_positions = np.where(mean_correlation_matrix == mean_correlation_matrix.max())
+                for local_j in range(pattern_data.number_columns):
+                    red_local_matrix_row.append(image_red[i+local_i][j+local_j])
+                    green_local_matrix_row.append(image_green[i+local_i][j+local_j])
+                    blue_local_matrix_row.append(image_blue[i+local_i][j+local_j])
 
-    rows_positions, cols_positions = biggest_correlation_positions
+                red_local_matrix.append(red_local_matrix_row)
+                green_local_matrix.append(green_local_matrix_row)
+                blue_local_matrix.append(blue_local_matrix_row)
+            # Aplicação da correlação:
+            red_correlation   = np.asmatrix(LocalFilter().correlation(red_local_matrix  , pattern_red_normalized  ))
+            green_correlation = np.asmatrix(LocalFilter().correlation(green_local_matrix, pattern_green_normalized))
+            blue_correlation  = np.asmatrix(LocalFilter().correlation(blue_local_matrix , pattern_blue_normalized ))
+
+            mean_cross_correlation_row.append((red_correlation + green_correlation + blue_correlation)/3)
+
+        mean_cross_correlation.append(mean_cross_correlation_row)
+
+    mean_cross_correlation = np.asmatrix(mean_cross_correlation)
+
+    biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
+    mean_row_center = biggest_mean_correlation_positions[0][0]
+    mean_col_center = biggest_mean_correlation_positions[1][0]
 
     if not plot in ["False", "false", False]:
-        plt.imshow(mpimg.imread("images\\" + image_name))
-        plt.scatter(x=cols_positions, y=rows_positions, c='g', s=40)
+        plt.imshow(mean_cross_correlation, cmap='gray')
         plt.show()
 
-def dot_rectangle_plot(center_position: tuple, rectangle_size: tuple, color='black', size=5):
+        image = mpimg.imread("images\\" + image_name) 
+        plt.imshow(image)
+        dot_rectangle_plot((mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows))
+        plt.show()
+    
+
+def dot_rectangle_plot(center_position: tuple, rectangle_size: tuple, color='white', size=15):
     half_width = int(rectangle_size[0] / 2)
     half_height = int(rectangle_size[1] / 2)
 
@@ -270,7 +306,7 @@ def dot_rectangle_plot(center_position: tuple, rectangle_size: tuple, color='bla
     y1 = center_position[1] - int(half_height/2)
     y2 = center_position[1]
     y3 = center_position[1] + int(half_height/2)
-    y4 = center_position[1] + half_width
+    y4 = center_position[1] + half_height
 
     rectangle_xs = [x0, x1, x2, x3, x4, x0, x4, x0, x4, x0, x4, x0, x1, x2, x3, x4]
     rectangle_ys = [y0, y0, y0, y0, y0, y1, y1, y2, y2, y3, y3, y4, y4, y4, y4, y4]

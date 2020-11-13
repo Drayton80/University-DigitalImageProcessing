@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 from Matrix import Matrix
 
 class LocalFilter:
@@ -36,16 +38,10 @@ class LocalFilter:
         # Matriz que guardará cada matriz local em que será aplicado a máscara
         matrix_of_local_matrices = []
 
-        for i in range(image_number_rows):
-            if i + mask_number_rows > image_number_rows:
-                break
-            
+        for i in tqdm(range(image_number_rows - mask_number_rows)):
             row_local_matrices = []
-            
-            for j in range(image_number_columns):
-                if j + mask_number_columns > image_number_columns:
-                    break
-                
+
+            for j in range(image_number_columns - mask_number_columns):
                 local_matrix = []
 
                 for local_i in range(mask_number_rows):
