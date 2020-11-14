@@ -477,11 +477,11 @@ def functionality7(image_name, pattern_name, plot):
 ```
 
 ## Resultados e Discussão
-Para a execução de testes foram fornecidas diversas imagens juntamente a especificação do trabalho. Para as funcionalidades de 1 a 5 foram utilizadas as seguintes imagens de teste: 
-
-![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+Para a execução de testes foram fornecidas diversas imagens juntamente a especificação do trabalho. Para as funcionalidades de 1 a 5 foram utilizadas as seguintes imagens para teste teste: 
 
 ![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+
+![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
 
 ![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
 
@@ -494,27 +494,56 @@ Já para a funcionalidade 6 e 7 a especificação requisita o seguinte uso das i
 Sendo a primeira aquela em que a busca será feita e a segunda o padrão que será buscado nela.
 
 ### Funcionalidade 1
-A conversão de RGB para YIQ seguida da conversão contrária deve resultar na mesma imagem iniial e esse foi o primeiro teste a ser executado no sistema através do método `functionality1`, o qual resultou, como esperado, nas seguintes imagens de retorno:
+
+O primeiro teste consistia em checar as conversões entre sistemas de cores através da conversão RGB para YIQ seguida da conversão contrária deve. A imagem usada para esse teste foi:
+
+![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+
+ Sendo a sua aplicação através do método `functionality1`, o qual resultou, como esperado, na seguinte imagem de retorno:
 
 ![CNN1(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(rgb-yiq-rgb).png?raw=true)
 
-![Detran_Minas-Gerais(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).png?raw=true)
-
-![2817540617(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/(rgb-yiq-rgb).png?raw=true)
-
 ### Funcionalidade 2
 
-![CNN1(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(negative-rgb).png?raw=true)
+Tal funcionalidade consistiu em testar ambas as conversões de negativo possíveis, sua aplicação é feita através do método `functionality2` e a imagem utilizada foi a mesma do item anterior. 
+
+#### Negativo em RGB
+
+Como esperado a aplicação do negativo nos três canais de cores RGB gerou um resultado que alterava tanto o brilho quanto a matiz da imagem original.
 
 ![Detran_Minas-Gerais(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-rgb).png?raw=true)
 
-![2817540617(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(negative-rgb).png?raw=true)
+#### Negativo em Y
 
-![CNN1(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(negative-y).png?raw=true)
+Já o negativo aplicado apenas no canal Y do sistema YIQ fez com que apenas o brilho seja invertido, mantendo a matiz original da imagem base.
 
 ![Detran_Minas-Gerais(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-y).png?raw=true)
 
-![2817540617(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(negative-rgb).png?raw=true)
+### Funcionalidade 3
+
+![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+
+#### Filtro da Média
+
+![CNN1(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media).png?raw=true)
+
+![Detran_Minas-Gerais(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(media).png?raw=true)
+
+#### Filtro de Sobel Horizontal
+
+![CNN1(sobel horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(sobel horizontal).png?raw=true)
+
+![Detran_Minas-Gerais(sobel horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(sobel horizontal).png?raw=true)
+
+
+#### Filtro de Sobel Vertical
+
+![CNN1(sobel vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(sobel vertical).png?raw=true)
+
+![Detran_Minas-Gerais(sobel vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(sobel vertical).png?raw=true)
+
+### Funcionalidade 4
+#### Filtro da Média 
 
 ## Conclusão
 
