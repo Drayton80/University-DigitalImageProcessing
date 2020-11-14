@@ -1,10 +1,4 @@
 # Módulo I do Trabalho Prático
- 
- juntamente com um relatório, contendo pelo menos as seguintes
-seções: introdução (contextualização e apresentação do tema, fundamentação
-teórica, objetivos), materiais e métodos (descrição das atividades desenvolvidas e
-das ferramentas e conhecimentos utilizados) resultados, discussão (problemas e
-dificuldades encontradas, comentários críticos sobre os resultados) e conclusão. 
 
 ## Introdução
 
@@ -22,7 +16,7 @@ Para o desenvolvimento das funcionalidades em si foi utilizada a linguagem de pr
 - **scipy:** para o uso da correlação cruzada em duas dimensões
 - **sklearn:** para a normalização de dados necessária em uma das funcionalidades
 
-Além dessas, foram utilizadas algumas bibliotecas à mais para maior facilidade no uso e desenvolvimento da aplicação, como re, argparse e progress.
+Além dessas, foram utilizadas algumas bibliotecas à mais para maior facilidade no uso e desenvolvimento da aplicação, como re, argparse e tqdm.
 
 ### Conversão entre RGB e YIQ
 Ao converter uma imagem do sistema de cores RGB para o YIQ é necessário aplicar três fórmulas que extraem a luminância das cores denotada por Y e as crominâncias da imagem que são armazenadas em I e Q.
@@ -111,11 +105,7 @@ def functionality1(image_name: str, plot):
 
     image_data.set_rgb_from_matrices(r, g, b)
     new_image_path = image_data.save_image(new_file_name_suffix='(rgb-yiq-rgb)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(new_image_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(new_image_path, plot)
 ```
 
 ### Filtro Negativo
@@ -150,11 +140,7 @@ def functionality2(image_name: str, plot):
 
     image_data.set_rgb_from_matrices(r_negative, g_negative, b_negative)
     new_image_path = image_data.save_image(new_file_name_suffix='(negative-rgb)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(new_image_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(new_image_path, plot)
 
     # PARTE 2 - Negativo em Y
     image_data = ImageData("images\\" + image_name)
@@ -167,11 +153,7 @@ def functionality2(image_name: str, plot):
 
     image_data.set_rgb_from_matrices(r, g, b)
     new_image_path = image_data.save_image(new_file_name_suffix='(negative-y)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(new_image_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(new_image_path, plot)
 ```
 
 ### Correlação
@@ -234,7 +216,9 @@ Os usos desse filtro são feitos dentro da `main` na segunda parte da função `
 ``` python 
     [...]
 
-    # PARTE 2 - Filtro Sobel
+    # PARTE 2 - Filtros de Sobel
+    image_data = ImageData("images\\" + image_name)
+
     sobel_horizontal_mask = Matrix().get_matrix_from_file('mask\\sobel horizontal.txt')
     red_sobel_horizontal   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_horizontal_mask)
     green_sobel_horizontal = LocalFilter().apply_generic_filter(image_data.get_matrix_green(), sobel_horizontal_mask)
@@ -242,11 +226,9 @@ Os usos desse filtro são feitos dentro da `main` na segunda parte da função `
 
     image_data.set_rgb_from_matrices(red_sobel_horizontal, green_sobel_horizontal, blue_sobel_horizontal)
     image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel horizontal)')
+    show_image(image_filtered_sobel_horizontal_path, plot)
 
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_sobel_horizontal_path) 
-        plt.imshow(image)
-        plt.show()
+    image_data = ImageData("images\\" + image_name)
 
     sobel_vertical_mask = Matrix().get_matrix_from_file('mask\\sobel vertical.txt')
     red_sobel_vertical   = LocalFilter().apply_generic_filter(image_data.get_matrix_red()  , sobel_vertical_mask)
@@ -255,15 +237,11 @@ Os usos desse filtro são feitos dentro da `main` na segunda parte da função `
 
     image_data.set_rgb_from_matrices(red_sobel_vertical, green_sobel_vertical, blue_sobel_vertical)
     image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel vertical)')
-
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_sobel_vertical_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(image_filtered_sobel_vertical_path, plot)
 ```
 
 ### Filtro da Média
-O filtro da média também é uma operação local, mas seu efeito consiste em borrar a imagem original dependendo do tamanho da máscara. A máscara da média é dada por uma matriz de elementos cujo valor é 1 sobre o total de elementos da matriz (nº de linhas vezes nº de colunas) e quanto maior for esse total, mais borrada será a imagem resultante. Há duas formas de utilizar tal filtro pelo código, a primeira é utilizar o método descrito no item anterior em conjunto com a máscara da média extraida de um arquivo txt, já a segunda consiste en utilizar o método abaixo localizado na `LocalFilter` que automaticamente já produz a máscara baseado nas dimensões dela fornecidas como parâmetro:
+O filtro da média também é uma operação local, mas seu efeito consiste em borrar a imagem original dependendo do tamanho da máscara. A máscara da média é dada por uma matriz de elementos cujo valor é 1 sobre o total de elementos da matriz e quanto maior for esse total, mais borrada será a imagem resultante. Há duas formas de utilizar tal filtro pelo código, a primeira é utilizar o método `apply_generic_filter` descrito no item anterior em conjunto com a máscara da média extraida de um arquivo txt, já a segunda consiste en utilizar o método abaixo localizado na `LocalFilter` que automaticamente já produz a máscara baseado nas dimensões dela fornecidas como parâmetro:
 ``` python
 def apply_mean_filter(self, image: list, mask_size=(3,3), zero_padding=True) -> list:
     mean_divider = 1 / (mask_size[0] * mask_size[1])
@@ -279,7 +257,6 @@ O uso de tal filtro é feito em duas ocasiões na `main`, a primeira na `functio
 def functionality3(image_name: str, plot):
     # PARTE 1 - Filtro Média
     image_data = ImageData("images\\" + image_name)
-    
     red_mean   = LocalFilter().apply_mean_filter(image_data.get_matrix_red()  , mask_size=(5,5))
     green_mean = LocalFilter().apply_mean_filter(image_data.get_matrix_green(), mask_size=(5,5))
     blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(5,5))
@@ -287,10 +264,7 @@ def functionality3(image_name: str, plot):
     image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
     image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media)')
 
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_mean_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(image_filtered_mean_path, plot)
     
     [...]
 ```
@@ -312,10 +286,7 @@ def functionality4(image_name: str, plot):
     end = time.time()
     print(end - start)
 
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_mean_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(image_filtered_mean_path, plot)
 
     # PARTE 2 - Aplicando Matriz 25x1 e depois 1x25
     image_data = ImageData("images\\" + image_name)
@@ -337,10 +308,7 @@ def functionality4(image_name: str, plot):
     end = time.time()
     print(end - start)
 
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_mean_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(image_filtered_mean_path, plot)
 ```
 
 ### Filtro da Mediana
@@ -380,23 +348,147 @@ def functionality5(image_name: str, plot):
     
     image_data.set_rgb_from_matrices(red_median, green_median, blue_median)
     image_filtered_median_path = image_data.save_image(new_file_name_suffix='(mediana)')
-    
-    if not plot in ["False", "false", False]:
-        image = mpimg.imread(image_filtered_median_path) 
-        plt.imshow(image)
-        plt.show()
+    show_image(image_filtered_median_path, plot)
 ```
 
 ### Busca de um Padrão em uma Imagem
 #### Correlação Cruzada Normalizada
-Essa etapa consiste em replicar o exemplo de uso da correlação cruzada fornecido para a função [normxcorr2 do MATLAB](https://la.mathworks.com/help/images/ref/normxcorr2.html?lang=en), mas aplicando ela em cada banda da imagem RGB e, em seguida, obtendo a média simples de cada correlação obtida por pixel entre as três bandas.
+Essa etapa consistiu em replicar o exemplo de uso da correlação cruzada normalizada fornecido para a função [normxcorr2 do MATLAB](https://la.mathworks.com/help/images/ref/normxcorr2.html?lang=en), mas em vez de replicar ela, foi necessário aplicar seu uso em cada banda da imagem RGB para, em seguida, obter a média simples do resultado da operação de correlação entre as três bandas de cores para cada pixel. Ou seja, o resultado dessa função seria uma matriz das médias entre três correlações cruzadas normalizadas (cada uma relativa a um canal do sistema RGB).
 
-Para a implementação dessa funcionalidade utilizou-se do método `normalize` fornecido pela biblioteca sklearn no seu módulo de pré-processamento de dados para executar a normalização das bandas em conjunto com o método `correlate2d` da biblioteca scipy que executa uma correlação cruzada entre uma imagem e um padrão fornecido.
+Para a implementação dessa funcionalidade utilizou-se do método `normalize` fornecido pela biblioteca sklearn para executar a normalização das bandas em conjunto com o método `correlate2d` da biblioteca scipy que executa uma correlação cruzada entre uma imagem e um padrão fornecido. Para um melhor desempenho devido ao alto custo das operações por pixel envolvidas, a extração das matrizes locais de cada vizinhança e as operações dos três canais foram todas executadas em um mesmo loop (distintamente das funcionalidades anteriores aonde a execução ocorria sequencialmente em fors separados). Tanto a operação quanto sua execução se encontram internamente na `main` através da função cujo nome é `functionality6`:
 
-## Resultados
-### Busca de um Padrão em uma Imagem
-A aplicação dos métodos e classes descritas foi implementada na main 
+``` python
+def functionality6(image_name, pattern_name, plot):    
+    pattern_data  = ImageData("images\\" + pattern_name)
+    pattern_red_normalized   = normalize( np.asmatrix(pattern_data.get_matrix_red())   , norm='l2')  
+    pattern_green_normalized = normalize( np.asmatrix(pattern_data.get_matrix_green()) , norm='l2')  
+    pattern_blue_normalized  = normalize( np.asmatrix(pattern_data.get_matrix_blue())  , norm='l2')  
+
+    image_data  = ImageData("images\\" + image_name)
+    image_red   = LocalFilter().zero_padding(image_data.get_matrix_red()  , pattern_red_normalized.shape  )
+    image_green = LocalFilter().zero_padding(image_data.get_matrix_green(), pattern_green_normalized.shape)
+    image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , pattern_blue_normalized.shape )
+
+    mean_cross_correlation = []
+
+    # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
+    for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
+        mean_cross_correlation_row = []
+        for j in range(image_data.number_columns - pattern_data.number_columns):
+            red_local_matrix   = []
+            green_local_matrix = []
+            blue_local_matrix  = []
+            # Geração da matriz local de cada canal:
+            for local_i in range(pattern_data.number_rows):
+                red_local_matrix_row   = []
+                green_local_matrix_row = []
+                blue_local_matrix_row  = []
+
+                for local_j in range(pattern_data.number_columns):
+                    red_local_matrix_row.append(image_red[i+local_i][j+local_j])
+                    green_local_matrix_row.append(image_green[i+local_i][j+local_j])
+                    blue_local_matrix_row.append(image_blue[i+local_i][j+local_j])
+
+                red_local_matrix.append(red_local_matrix_row)
+                green_local_matrix.append(green_local_matrix_row)
+                blue_local_matrix.append(blue_local_matrix_row)
+            # Normalização das matrizes locais:
+            image_red_local_normalized   = normalize(np.asmatrix(red_local_matrix)  , norm='l2')
+            image_green_local_normalized = normalize(np.asmatrix(green_local_matrix), norm='l2')
+            image_blue_local_normalized  = normalize(np.asmatrix(blue_local_matrix) , norm='l2')
+            # Correlação:
+            red_correlation   = signal.correlate2d(image_red_local_normalized  , pattern_red_normalized  , boundary='symm', mode='valid')[0][0]
+            green_correlation = signal.correlate2d(image_green_local_normalized, pattern_green_normalized, boundary='symm', mode='valid')[0][0]
+            blue_correlation  = signal.correlate2d(image_blue_local_normalized , pattern_blue_normalized , boundary='symm', mode='valid')[0][0]
+
+            mean_cross_correlation_row.append((red_correlation + green_correlation + blue_correlation)/3)
+
+        mean_cross_correlation.append(mean_cross_correlation_row)
+
+    mean_cross_correlation = np.asmatrix(mean_cross_correlation)
+
+    biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
+    mean_row_center = biggest_mean_correlation_positions[0][0]
+    mean_col_center = biggest_mean_correlation_positions[1][0]
+
+    if not plot in ["False", "false", False]:
+        # Correlação mapeada e exibida em tons de cinza:
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(cross-corr gray map)")
+        # Exibição da imagem com a região de maior correlação destacada:
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(cross-corr result)")
+```
+
+#### Correlação Simples
+Por fim, a ultima funcionalidade tinha como requisito executar a mesma busca por padrão feita no item anterior, mas utilizando o método `correlation`, ou seja, uma correlação simples sem normalização. A implementação foi feita similarmente ao item anterior visando desempenho e seu código encontra-se na `main` internamente a função `functionality7`:
+
+``` python
+def functionality7(image_name, pattern_name, plot):
+    pattern_data  = ImageData("images\\" + pattern_name)
+    pattern_red   = pattern_data.get_matrix_red()   
+    pattern_green = pattern_data.get_matrix_green()
+    pattern_blue  = pattern_data.get_matrix_blue() 
+
+    image_data  = ImageData("images\\" + image_name)
+    image_red   = LocalFilter().zero_padding(image_data.get_matrix_red()  , (pattern_data.number_rows, pattern_data.number_columns))
+    image_green = LocalFilter().zero_padding(image_data.get_matrix_green(), (pattern_data.number_rows, pattern_data.number_columns))
+    image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , (pattern_data.number_rows, pattern_data.number_columns))
+
+    mean_cross_correlation = []
+
+    # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
+    for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
+        mean_cross_correlation_row = []
+        for j in range(image_data.number_columns - pattern_data.number_columns):
+            red_local_matrix   = []
+            green_local_matrix = []
+            blue_local_matrix  = []
+            # Geração da matriz local de cada canal:
+            for local_i in range(pattern_data.number_rows):
+                red_local_matrix_row   = []
+                green_local_matrix_row = []
+                blue_local_matrix_row  = []
+                for local_j in range(pattern_data.number_columns):
+                    red_local_matrix_row.append(image_red[i+local_i][j+local_j])
+                    green_local_matrix_row.append(image_green[i+local_i][j+local_j])
+                    blue_local_matrix_row.append(image_blue[i+local_i][j+local_j])
+                red_local_matrix.append(red_local_matrix_row)
+                green_local_matrix.append(green_local_matrix_row)
+                blue_local_matrix.append(blue_local_matrix_row)
+           
+            red_correlation   = LocalFilter().correlation(red_local_matrix  , pattern_red  )
+            green_correlation = LocalFilter().correlation(green_local_matrix, pattern_green)
+            blue_correlation  = LocalFilter().correlation(blue_local_matrix , pattern_blue )
+
+            mean_cross_correlation_row.append((red_correlation + green_correlation + blue_correlation)/3)
+
+        mean_cross_correlation.append(mean_cross_correlation_row)
+
+    mean_cross_correlation = np.asmatrix(mean_cross_correlation)
+
+    biggest_mean_correlation_positions = np.where(mean_cross_correlation == mean_cross_correlation.max())
+    mean_row_center = biggest_mean_correlation_positions[0][0]
+    mean_col_center = biggest_mean_correlation_positions[1][0]
+
+    if not plot in ["False", "false", False]:
+        # Correlação mapeada e exibida em tons de cinza:
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(corr gray map)")
+        # Exibição da imagem com a região de maior correlação destacada:
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr gray map)")
+```
+
+## Resultados e Discussão
+Para a execução de testes foram utilizadas diversas imagens fornecidas juntamente a especificação do trabalho. Tanto elas quanto o resultado da aplicação das funcionalidades são descritos nos items abaixo. 
+
+![alt text](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+
+### Funcionalidade 1
 
 ## Discussão
 
 ## Conclusão
+
+ juntamente com um relatório, contendo pelo menos as seguintes
+seções: introdução (contextualização e apresentação do tema, fundamentação
+teórica, objetivos), materiais e métodos (descrição das atividades desenvolvidas e
+das ferramentas e conhecimentos utilizados) resultados, discussão (problemas e
+dificuldades encontradas, comentários críticos sobre os resultados) e conclusão. 

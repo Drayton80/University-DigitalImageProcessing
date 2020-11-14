@@ -17,27 +17,51 @@ from PointFilter import PointFilter
 from LocalFilter import LocalFilter
 
 
-def show_image(image_path: str, plot: bool) -> None:
+def show_image(image_path: str, plot: bool, save_plot_suffix=None) -> None:
     if not plot in ["False", "false", False]:
         image = mpimg.imread(image_path)
         _, axes = plt.subplots(1)
         axes.imshow(image)
         axes.set_axis_off()
+
+        if save_plot_suffix != None and isinstance(save_plot_suffix, str):
+            # Utiliza expressões regulares para obter apenas o nome da imagem entre
+            # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
+            image_name = re.search(r'(\w*\\)*(.*)\.\w+', image_path).group(2)
+            new_image_path_save = "images\\" + image_name + save_plot_suffix
+            plt.savefig(new_image_path_save)
+
         plt.show()
 
-def show_image_with_dot_rectangle(image_path: str, plot: bool, center_position: tuple, rectangle_size: tuple, color='white', size=15):
+def show_image_with_dot_rectangle(image_path: str, plot: bool, center_position: tuple, rectangle_size: tuple, color='white', size=15, save_plot_suffix=None):
     if not plot in ["False", "false", False]:
         image = mpimg.imread(image_path) 
         _, axes = plt.subplots(1)
         axes.imshow(image)
         dot_rectangle_plot(center_position, rectangle_size, color=color, size=size)
         axes.set_axis_off()
+
+        if save_plot_suffix != None and isinstance(save_plot_suffix, str):
+            # Utiliza expressões regulares para obter apenas o nome da imagem entre
+            # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
+            image_name = re.search(r'(\w*\\)*(.*)\.\w+', image_path).group(2)
+            new_image_path_save = "images\\" + image_name + save_plot_suffix
+            plt.savefig(new_image_path_save)
+
         plt.show()
 
-def show_gray_map(matrix) -> None:
+def show_gray_map(matrix, original_image_path='', save_plot_suffix=None) -> None:
     _, axes = plt.subplots(1)
     plt.imshow(matrix, cmap='gray')
     axes.set_axis_off()
+
+    if save_plot_suffix != None and isinstance(save_plot_suffix, str):
+            # Utiliza expressões regulares para obter apenas o nome da imagem entre
+            # o caminho do diretório e o . que define o tipo do arquivo ([...]\nome.tipo):
+            image_name = re.search(r'(\w*\\)*(.*)\.\w+', original_image_path).group(2)
+            new_image_path_save = "images\\" + image_name + save_plot_suffix
+            plt.savefig(new_image_path_save)
+
     plt.show()
 
 def dot_rectangle_plot(center_position: tuple, rectangle_size: tuple, color='white', size=15):
@@ -200,6 +224,7 @@ def functionality6(image_name, pattern_name, plot):
     image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , pattern_blue_normalized.shape )
 
     mean_cross_correlation = []
+
     # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
     for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
         mean_cross_correlation_row = []
@@ -242,9 +267,9 @@ def functionality6(image_name, pattern_name, plot):
 
     if not plot in ["False", "false", False]:
         # Correlação mapeada e exibida em tons de cinza:
-        show_gray_map(mean_cross_correlation)
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(cross-corr gray map)")
         # Exibição da imagem com a região de maior correlação destacada:
-        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows))
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(cross-corr result)")
         
 
 def functionality7(image_name, pattern_name, plot):
@@ -259,6 +284,7 @@ def functionality7(image_name, pattern_name, plot):
     image_blue  = LocalFilter().zero_padding(image_data.get_matrix_blue() , (pattern_data.number_rows, pattern_data.number_columns))
 
     mean_cross_correlation = []
+
     # Itera até menos o pattern para não ultrapassar os limites da imagem com o local i e j:
     for i in tqdm(range(image_data.number_rows - pattern_data.number_rows)):
         mean_cross_correlation_row = []
@@ -295,9 +321,9 @@ def functionality7(image_name, pattern_name, plot):
 
     if not plot in ["False", "false", False]:
         # Correlação mapeada e exibida em tons de cinza:
-        show_gray_map(mean_cross_correlation)
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(corr gray map)")
         # Exibição da imagem com a região de maior correlação destacada:
-        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows))
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr gray map)")
 
 
 if __name__ == '__main__':
@@ -311,7 +337,13 @@ if __name__ == '__main__':
 
     # Inicializa o servido da aplicação:
     if args["funcionalidade"] == "all":
-        pass
+        functionality1(args["imagem"], False)
+        functionality2(args["imagem"], False)
+        functionality3(args["imagem"], False)
+        functionality4(args["imagem"], False)
+        functionality5(args["imagem"], False)
+        functionality6(args["imagem"], args["pattern"], args["plot"])
+        functionality7(args["imagem"], args["pattern"], args["plot"])
     elif args["funcionalidade"] == "1":
         functionality1(args["imagem"], args["plot"])
     elif args["funcionalidade"] == "2":
