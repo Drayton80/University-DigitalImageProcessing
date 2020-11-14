@@ -477,11 +477,30 @@ def functionality7(image_name, pattern_name, plot):
 ```
 
 ## Resultados e Discussão
-Para a execução de testes foram utilizadas diversas imagens fornecidas juntamente a especificação do trabalho. Tanto elas quanto o resultado da aplicação das funcionalidades são descritos nos items abaixo. 
+Para a execução de testes foram fornecidas diversas imagens juntamente a especificação do trabalho. Para as funcionalidades de 1 a 5 foram utilizadas as seguintes imagens de teste: 
 
-![alt text](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+
+![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+
+![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
+
+Já para a funcionalidade 6 e 7 a especificação requisita o seguinte uso das imagens:
+
+![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
+
+![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
+
+Sendo a primeira utilizada como base e a segunda como padrão de busca.
 
 ### Funcionalidade 1
+A conversão de RGB para YIQ seguida da conversão contrária deve resultar na mesma imagem iniial e esse foi o primeiro teste a ser executado no sistema através do método `functionality1`, o qual resultou, como esperado, nas seguintes imagens de retorno:
+
+![CNN1(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(rgb-yiq-rgb).png?raw=true)
+
+![Detran_Minas-Gerais(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).jpg?raw=true)
+
+![2817540617(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
 
 ## Discussão
 
