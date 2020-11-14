@@ -491,18 +491,30 @@ Já para a funcionalidade 6 e 7 a especificação requisita o seguinte uso das i
 
 ![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
 
-Sendo a primeira utilizada como base e a segunda como padrão de busca.
+Sendo a primeira aquela em que a busca será feita e a segunda o padrão que será buscado nela.
 
 ### Funcionalidade 1
 A conversão de RGB para YIQ seguida da conversão contrária deve resultar na mesma imagem iniial e esse foi o primeiro teste a ser executado no sistema através do método `functionality1`, o qual resultou, como esperado, nas seguintes imagens de retorno:
 
 ![CNN1(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(rgb-yiq-rgb).png?raw=true)
 
-![Detran_Minas-Gerais(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).jpg?raw=true)
+![Detran_Minas-Gerais(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).png?raw=true)
 
-![2817540617(rgb-yiq-rgb).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
+![2817540617(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/(rgb-yiq-rgb).png?raw=true)
 
-## Discussão
+### Funcionalidade 2
+
+![CNN1(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(negative-rgb).png?raw=true)
+
+![Detran_Minas-Gerais(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-rgb).png?raw=true)
+
+![2817540617(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(negative-rgb).png?raw=true)
+
+![CNN1(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(negative-y).png?raw=true)
+
+![Detran_Minas-Gerais(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-y).png?raw=true)
+
+![2817540617(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(negative-rgb).png?raw=true)
 
 ## Conclusão
 
