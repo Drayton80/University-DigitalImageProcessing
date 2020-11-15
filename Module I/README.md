@@ -556,14 +556,20 @@ O propósito dessa funcionalidade foi aplicar o filtro da mediana e visualizar s
 
 O método que codifica isso está presente na `main` internamente a função `functionality5` e o tamanho da mediana escolhida foi 10x10, o que resultou na imagem exibida abaixo. Como é possível observar, além do efeito visual de pintura, grande parte das gotas de água foram removidas devido a aplicação do filtro.
 
-![2817540617(mediana).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).jpg?raw=true)
+![2817540617(mediana).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).png?raw=true)
 
 ### Funcionalidade 6
-Como já descrito na seção anterior, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer esse teste são exibidos respectivamente logo abaixo.
+Como já descrito na seção anterior, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer isso são exibidos respectivamente logo abaixo.
 
 ![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
 
 ![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
+
+A execução dessa funcionalidade encontra-se dentro da `functionality6`e ele resultou, respectivamente, nos seguintes mapa em tons de cinza das médias das correlações e destacamento da região do padrão.
+
+![baboon(cross-corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-gray-map)recortado.png?raw=true)
+
+![baboon(cross-corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-result)recortado.png?raw=true)
 
 ## Conclusão
 
