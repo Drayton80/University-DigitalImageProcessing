@@ -144,7 +144,7 @@ def functionality3(image_name: str, plot):
     blue_sobel_horizontal  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_horizontal_mask)
 
     image_data.set_rgb_from_matrices(red_sobel_horizontal, green_sobel_horizontal, blue_sobel_horizontal)
-    image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel horizontal)')
+    image_filtered_sobel_horizontal_path = image_data.save_image(new_file_name_suffix='(sobel-horizontal)')
     show_image(image_filtered_sobel_horizontal_path, plot)
 
     image_data = ImageData("images\\" + image_name)
@@ -155,7 +155,7 @@ def functionality3(image_name: str, plot):
     blue_sobel_vertical  = LocalFilter().apply_generic_filter(image_data.get_matrix_blue() , sobel_vertical_mask)
 
     image_data.set_rgb_from_matrices(red_sobel_vertical, green_sobel_vertical, blue_sobel_vertical)
-    image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel vertical)')
+    image_filtered_sobel_vertical_path = image_data.save_image(new_file_name_suffix='(sobel-vertical)')
     show_image(image_filtered_sobel_vertical_path, plot)
 
 
@@ -170,7 +170,7 @@ def functionality4(image_name: str, plot):
     blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(25,25))
     
     image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
-    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media 25x25)')
+    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media-25x25)')
 
     end = time.time()
     print(end - start)
@@ -192,7 +192,7 @@ def functionality4(image_name: str, plot):
     blue_mean  = LocalFilter().apply_mean_filter(image_data.get_matrix_blue() , mask_size=(1,25))
     image_data.set_rgb_from_matrices(red_mean, green_mean, blue_mean)
 
-    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media 25x1 e 1x25)')
+    image_filtered_mean_path = image_data.save_image(new_file_name_suffix='(media-25x1-e-1x25)')
 
     end = time.time()
     print(end - start)
@@ -267,9 +267,9 @@ def functionality6(image_name, pattern_name, plot):
 
     if not plot in ["False", "false", False]:
         # Correlação mapeada e exibida em tons de cinza:
-        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(cross-corr gray map)")
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(cross-corr-gray-map)")
         # Exibição da imagem com a região de maior correlação destacada:
-        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(cross-corr result)")
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(cross-corr-result)")
         
 
 def functionality7(image_name, pattern_name, plot):
@@ -321,9 +321,9 @@ def functionality7(image_name, pattern_name, plot):
 
     if not plot in ["False", "false", False]:
         # Correlação mapeada e exibida em tons de cinza:
-        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(corr gray map)")
+        show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(corr-gray-map)")
         # Exibição da imagem com a região de maior correlação destacada:
-        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr gray map)")
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr-gray-map)")
 
 
 if __name__ == '__main__':

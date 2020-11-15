@@ -477,21 +477,7 @@ def functionality7(image_name, pattern_name, plot):
 ```
 
 ## Resultados e Discussão
-Para a execução de testes foram fornecidas diversas imagens juntamente a especificação do trabalho. Para as funcionalidades de 1 a 5 foram utilizadas as seguintes imagens para teste teste: 
-
-![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
-
-![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
-
-![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
-
-Já para a funcionalidade 6 e 7 a especificação requisita o seguinte uso das imagens:
-
-![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
-
-![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
-
-Sendo a primeira aquela em que a busca será feita e a segunda o padrão que será buscado nela.
+Para a execução de testes foram fornecidas diversas imagens juntamente a especificação do trabalho e cada uma foi escolhida em específico dependendo da funcionalidade que fosse ser executada. É importante ressaltar que a execução escolhida aqui foi utilizando extensão por zeros em todas as funcionalidades com objetivo de não haver perdas no tamanho das imagens.
 
 ### Funcionalidade 1
 
@@ -501,7 +487,7 @@ O primeiro teste consistia em checar as conversões entre sistemas de cores atra
 
  Sendo a sua aplicação através do método `functionality1`, o qual resultou, como esperado, na seguinte imagem de retorno:
 
-![CNN1(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(rgb-yiq-rgb).png?raw=true)
+![Detran_Minas-Gerais(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).png?raw=true)
 
 ### Funcionalidade 2
 
@@ -521,29 +507,50 @@ Já o negativo aplicado apenas no canal Y do sistema YIQ fez com que apenas o br
 
 ### Funcionalidade 3
 
-![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+Essa funcionalidade tinha como objetivo testar o método de correlação através de sua aplicação com os filtros da média e sobel. A execução de tais métodos está presente na `main` dentro da função `functionality3` e a imagem escolhida para os testes é aquela que está logo abaixo.
+
+![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
 
 #### Filtro da Média
 
-![CNN1(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media).png?raw=true)
+O tamanho do filtro escolhido para o teste foi 5x5 e a imagem resultante de sua aplicação foi a mesma, mas com um leve suavização nos contornos das figuras geométricas.
 
-![Detran_Minas-Gerais(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(media).png?raw=true)
+![baboon(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(media).png?raw=true)
+
 
 #### Filtro de Sobel Horizontal
 
-![CNN1(sobel horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(sobel horizontal).png?raw=true)
+O filtro aqui utilizado foi aquele descrito na seção Materiais e Métodos cuja máscara está presente dentro do arquivo `mask/sobel horizontal.txt` e seu resultado foi justamente o de destacar as transições de cores (em outras palavras, os contornos) horizontais e as diagonais mais próximas da horizontal. Algo que é possível destacar foi a geração de uma linha completamente branca na parte inferior da imagem, sendo isso ocorrido devido ao formata da máscara (onde os números negativos estão na linha inferior) em conjunto com a extensão por zeros, fazendo com que a operação de correlação gerasse o valor máximo nessa região.
 
-![Detran_Minas-Gerais(sobel horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(sobel horizontal).png?raw=true)
+![baboon(sobel-horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-horizontal).png?raw=true)
 
 
 #### Filtro de Sobel Vertical
 
-![CNN1(sobel vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(sobel vertical).png?raw=true)
+Já nesse caso a máscara utilizada foi `mask/sobel vertical.txt` e seu resultado foi, de certa forma, complementar ao anterior, já que o destaque aqui foi feito nas bordas verticais e aquelas mais próximas da vertical. Ocorrendo aqui também o mesmo comportamento da linha branca na anterior, mas dessa vez ela sendo gerada na extrema esquerda da imagem pois aqui a máscara possui os números negativos na coluna da esquerda.
 
-![Detran_Minas-Gerais(sobel vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(sobel vertical).png?raw=true)
+![baboon(sobel-vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-vertical).png?raw=true)
+
 
 ### Funcionalidade 4
-#### Filtro da Média 
+
+A finalidade dessa funcionalidade foi testar a diferença de desempenho e resultado entre a aplicação do filtro da média de máscara 25x25 com o mesmo filtro de máscara 25x1 seguido pela máscara 1x25. A codificação dela está presente na `main` dentro da função `functionality3` e a imagem original utilizada para testes está logo abaixo.
+
+![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+
+#### Máscara 25x25
+
+A operação de correlação aplicada em todas as vizinhanças da imagem nos três canais de cores demorou aproximadamente 178 segundos e a imagem resultante é demonstrada abaixo, sendo ela uma versão muito borrada da original, fazendo com que fique bem nítido nas quinas das figuras geométricas o efeito colateral de deixar áreas quadradas na suavização presente no uso do filtro da média box.
+
+![CNN11(media-25x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN11(media-25x25).png?raw=true)
+
+#### Máscara 25x1 seguida por 1x25
+
+Já nesse caso a aplicação de toda a operação foi reduzida para aproximadamente 37 segundos (quase 1/5 do valor superior) e a imagem final obteve exatamente o mesmo resultado da anterior, como é possível ver abaixo.
+
+![CNN11(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN11(media-25x1-e-1x25).png?raw=true)
+
+### Funcionalidade 5
 
 ## Conclusão
 
