@@ -323,7 +323,7 @@ def functionality7(image_name, pattern_name, plot):
         # Correlação mapeada e exibida em tons de cinza:
         show_gray_map(mean_cross_correlation, original_image_path="images\\" + image_name, save_plot_suffix="(corr-gray-map)")
         # Exibição da imagem com a região de maior correlação destacada:
-        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr-gray-map)")
+        show_image_with_dot_rectangle("images\\" + image_name, plot, (mean_col_center, mean_row_center), (pattern_data.number_columns, pattern_data.number_rows), save_plot_suffix="(corr-result)")
 
 
 if __name__ == '__main__':

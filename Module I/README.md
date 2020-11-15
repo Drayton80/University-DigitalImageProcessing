@@ -559,17 +559,28 @@ O método que codifica isso está presente na `main` internamente a função `fu
 ![2817540617(mediana).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).png?raw=true)
 
 ### Funcionalidade 6
-Como já descrito na seção anterior, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer isso são exibidos respectivamente logo abaixo.
+Como já descrito na seção Materiais e Métodos, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer isso são exibidos respectivamente logo abaixo.
 
 ![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
 
 ![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
 
-A execução dessa funcionalidade encontra-se dentro da `functionality6`e ele resultou, respectivamente, nos seguintes mapa em tons de cinza das médias das correlações e destacamento da região do padrão.
+A execução dessa funcionalidade encontra-se dentro da `functionality6` e ela resultou, respectivamente, nos seguintes mapa em tons de cinza das médias das correlações e destacamento da região de maior correlação entre os pixels. 
 
 ![baboon(cross-corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-gray-map)recortado.png?raw=true)
 
 ![baboon(cross-corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-result)recortado.png?raw=true)
+
+Como é possível visualizar, a busca pelo padrão obteve o resultado esperado ao encontrar a região do padrão ao mesmo tempo que obteve uma correlação altíssima também no outro olho devido a sua similaridade.
+
+### Funcionalidade 7
+Já aqui seria necessário fazer a mesma busca utilizando a imagem e o padrão da Funcionalidade anterior, mas dessa vez aplicando a Correlação utilizada na Funcionalidade 3. A codificação está presente dentro da `functionality7` e ela teve como resultado, respectivamente, os seguintes mapa em tons de cinza das médias das correlações e destacamento da região de maior correlação entre os pixels. 
+
+![baboon(corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(corr-gray-map)recortado.png?raw=true)
+
+![baboon(corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(corr-result)recortado.png?raw=true)
+
+Nesse caso, como a Correlação não foi normalizada em cada vizinhança e na máscara, o resultado obtido não foi a região correta apesar de haver uma grande correlação nos olhos. Sendo isso decorrido do fato em que a média dos cálculos das correlações acabará obtendo valores mais altos em regiões da imagem que possuam valores de RGB maiores, ou seja, aquelas que possuem um brilho maior, o que fica ainda mais evidente observando o mapa em tons de cinza. 
 
 ## Conclusão
 
