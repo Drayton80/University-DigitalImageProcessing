@@ -214,6 +214,7 @@ E a máscara de detecção vertical:
 Os usos desse filtro são feitos dentro da `main` na segunda parte da função `functionality3`, a qual tem como objetivo testar a correlação utilizando tanto esse filtro quanto o da média, que será descrita no próximo item.
 
 ``` python 
+def functionality3(image_name: str, plot):
     [...]
 
     # PARTE 2 - Filtros de Sobel
@@ -481,7 +482,7 @@ Para a execução de testes foram fornecidas diversas imagens juntamente a espec
 
 ### Funcionalidade 1
 
-O primeiro teste consistia em checar as conversões entre sistemas de cores através da conversão RGB para YIQ seguida da conversão contrária deve. A imagem usada para esse teste foi:
+O primeiro teste consistia em checar as conversões entre sistemas de cores através da conversão RGB para YIQ seguida da conversão contrária. A imagem usada para esse teste foi:
 
 ![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
 
@@ -513,21 +514,21 @@ Essa funcionalidade tinha como objetivo testar o método de correlação atravé
 
 #### Filtro da Média
 
-O tamanho do filtro escolhido para o teste foi 5x5 e a imagem resultante de sua aplicação foi a mesma, mas com um leve suavização nos contornos das figuras geométricas.
+O tamanho do filtro escolhido para o teste foi 5x5 e a imagem resultante de sua aplicação foi a mesma, mas com um leve suavização nela como um todo.
 
 ![baboon(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(media).png?raw=true)
 
 
 #### Filtro de Sobel Horizontal
 
-O filtro aqui utilizado foi aquele descrito na seção Materiais e Métodos cuja máscara está presente dentro do arquivo `mask/sobel horizontal.txt` e seu resultado foi justamente o de destacar as transições de cores (em outras palavras, os contornos) horizontais e as diagonais mais próximas da horizontal. Algo que é possível destacar foi a geração de uma linha completamente branca na parte inferior da imagem, sendo isso ocorrido devido ao formata da máscara (onde os números negativos estão na linha inferior) em conjunto com a extensão por zeros, fazendo com que a operação de correlação gerasse o valor máximo nessa região.
+O filtro aqui utilizado foi aquele descrito na seção Materiais e Métodos cuja máscara está presente dentro do arquivo `mask/sobel horizontal.txt` e seu resultado foi justamente o de destacar as transições de cores (em outras palavras, os contornos) horizontais e as diagonais mais próximas da horizontal. Algo que é possível ressaltar foi a geração de uma linha completamente branca na parte inferior da imagem, sendo isso ocorrido devido ao formata da máscara (onde os números negativos estão na linha inferior) em conjunto com a extensão por zeros, fazendo com que a operação de correlação gerasse o valor máximo nessa região.
 
 ![baboon(sobel-horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-horizontal).png?raw=true)
 
 
 #### Filtro de Sobel Vertical
 
-Já nesse caso a máscara utilizada foi `mask/sobel vertical.txt` e seu resultado foi, de certa forma, complementar ao anterior, já que o destaque aqui foi feito nas bordas verticais e aquelas mais próximas da vertical. Ocorrendo aqui também o mesmo comportamento da linha branca na anterior, mas dessa vez ela sendo gerada na extrema esquerda da imagem pois aqui a máscara possui os números negativos na coluna da esquerda.
+Já nesse caso a máscara utilizada foi `mask/sobel vertical.txt` e seu resultado foi, de certa forma, complementar ao anterior, já que o destaque aqui foi feito nas bordas verticais e aquelas mais próximas da vertical. Ocorrendo aqui o mesmo comportamento da linha branca na anterior, mas dessa vez ela sendo gerada na extrema esquerda da imagem pois aqui a máscara possui os números negativos na coluna da esquerda.
 
 ![baboon(sobel-vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-vertical).png?raw=true)
 
@@ -546,7 +547,7 @@ A operação de correlação aplicada em todas as vizinhanças da imagem nos tr�
 
 #### Máscara 25x1 seguida por 1x25
 
-Já nesse caso a aplicação de toda a operação foi reduzida para aproximadamente 37 segundos (quase 1/5 do valor superior) e a imagem final obteve exatamente o mesmo resultado da anterior, como é possível ver abaixo.
+Já nesse caso a aplicação de toda a operação foi reduzida para aproximadamente 37 segundos (quase 1/5 do valor no item superior) e a imagem final obteve exatamente o mesmo resultado da anterior, como é possível ver abaixo.
 
 ![CNN1(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media-25x1-e-1x25).png?raw=true)
 
@@ -559,7 +560,7 @@ O método que codifica isso está presente na `main` internamente a função `fu
 ![2817540617(mediana).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).png?raw=true)
 
 ### Funcionalidade 6
-Como já descrito na seção Materiais e Métodos, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer isso são exibidos respectivamente logo abaixo.
+Como já descrito na seção Materiais e Métodos, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para isso são exibidos respectivamente logo abaixo.
 
 ![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
 
@@ -584,8 +585,4 @@ Nesse caso, como a Correlação não foi normalizada em cada vizinhança e na m�
 
 ## Conclusão
 
- juntamente com um relatório, contendo pelo menos as seguintes
-seções: introdução (contextualização e apresentação do tema, fundamentação
-teórica, objetivos), materiais e métodos (descrição das atividades desenvolvidas e
-das ferramentas e conhecimentos utilizados) resultados, discussão (problemas e
-dificuldades encontradas, comentários críticos sobre os resultados) e conclusão. 
+Em virtude do que foi apresentado, é possível concluir que o objetivo geral da aplicação foi alcançado ao expor de forma prática aquilo que foi lecionado em teória durante a disciplina e, além disso, houve uma demonstração de resultados interessantes sobre certas especificidades de alguns dos métodos, como o efeito colateral do fitro de média box e a redução de ruído da mediana. Porém, ainda seria possível obter diversos aperfeiçoamentos para o código aqui descrito, sendo o mais destacável a melhoria de desempenho através da vetorização do código, a qual seria possível ao utilizar as classes e métodos da biblioteca `numpy` com uma refatoração da aplicação.
