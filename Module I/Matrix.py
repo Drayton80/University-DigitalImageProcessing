@@ -38,7 +38,7 @@ class Matrix:
             for element in row:
                 all_matrix_elements.append(element)
 
-        return statistics.median(sorted(all_matrix_elements))
+        return sorted(all_matrix_elements)[int(len(all_matrix_elements)/2)]
 
     def normalize_matrix(self, matrix: list):
         biggest_element = 0

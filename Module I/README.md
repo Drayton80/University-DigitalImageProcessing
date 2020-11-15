@@ -342,9 +342,9 @@ Esse filtro é utilizado internamente na `main` através da função cujo nome �
 def functionality5(image_name: str, plot):
     image_data = ImageData("images\\" + image_name)
     
-    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(5,5))
-    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(5,5))
-    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(5,5))
+    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(10,10))
+    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(10,10))
+    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(10,10))
     
     image_data.set_rgb_from_matrices(red_median, green_median, blue_median)
     image_filtered_median_path = image_data.save_image(new_file_name_suffix='(mediana)')
@@ -542,15 +542,28 @@ A finalidade dessa funcionalidade foi testar a diferença de desempenho e result
 
 A operação de correlação aplicada em todas as vizinhanças da imagem nos três canais de cores demorou aproximadamente 178 segundos e a imagem resultante é demonstrada abaixo, sendo ela uma versão muito borrada da original, fazendo com que fique bem nítido nas quinas das figuras geométricas o efeito colateral de deixar áreas quadradas na suavização presente no uso do filtro da média box.
 
-![CNN11(media-25x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN11(media-25x25).png?raw=true)
+![CNN1(media-25x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media-25x25).png?raw=true)
 
 #### Máscara 25x1 seguida por 1x25
 
 Já nesse caso a aplicação de toda a operação foi reduzida para aproximadamente 37 segundos (quase 1/5 do valor superior) e a imagem final obteve exatamente o mesmo resultado da anterior, como é possível ver abaixo.
 
-![CNN11(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN11(media-25x1-e-1x25).png?raw=true)
+![CNN1(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media-25x1-e-1x25).png?raw=true)
 
 ### Funcionalidade 5
+O propósito dessa funcionalidade foi aplicar o filtro da mediana e visualizar seu resultado. A imagem escolhida para esse caso foi essa exibida abaixo justamente devido a alta presença das diversas gotas de água em queda na imagem que, ao se assimilarem com ruído salt and pepper, serão impactados devido a aplicação do filtro.
+![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
+
+O método que codifica isso está presente na `main` internamente a função `functionality5` e o tamanho da mediana escolhida foi 10x10, o que resultou na imagem exibida abaixo. Como é possível observar, além do efeito visual de pintura, grande parte das gotas de água foram removidas devido a aplicação do filtro.
+
+![2817540617(mediana).jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).jpg?raw=true)
+
+### Funcionalidade 6
+Como já descrito na seção anterior, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para fazer esse teste são exibidos respectivamente logo abaixo.
+
+![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
+
+![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
 
 ## Conclusão
 

@@ -203,9 +203,9 @@ def functionality4(image_name: str, plot):
 def functionality5(image_name: str, plot):
     image_data = ImageData("images\\" + image_name)
     
-    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(5,5))
-    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(5,5))
-    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(5,5))
+    red_median   = LocalFilter().apply_median_filter(image_data.get_matrix_red()  , mask_size=(10,10))
+    green_median = LocalFilter().apply_median_filter(image_data.get_matrix_green(), mask_size=(10,10))
+    blue_median  = LocalFilter().apply_median_filter(image_data.get_matrix_blue() , mask_size=(10,10))
     
     image_data.set_rgb_from_matrices(red_median, green_median, blue_median)
     image_filtered_median_path = image_data.save_image(new_file_name_suffix='(mediana)')
