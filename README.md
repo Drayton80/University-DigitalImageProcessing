@@ -484,11 +484,11 @@ Para a execução de testes foram fornecidas diversas imagens juntamente a espec
 
 O primeiro teste consistia em checar as conversões entre sistemas de cores através da conversão RGB para YIQ seguida da conversão contrária. A imagem usada para esse teste foi:
 
-![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais.jpg?raw=true)
+![Detran_Minas-Gerais.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/Detran_Minas-Gerais.jpg?raw=true)
 
  Sendo a sua aplicação através do método `functionality1`, o qual resultou, como esperado, na seguinte imagem de retorno:
 
-![Detran_Minas-Gerais(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(rgb-yiq-rgb).png?raw=true)
+![Detran_Minas-Gerais(rgb-yiq-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/Detran_Minas-Gerais(rgb-yiq-rgb).png?raw=true)
 
 ### Funcionalidade 2
 
@@ -498,88 +498,88 @@ Tal funcionalidade consistiu em testar ambas as conversões de negativo possíve
 
 Como esperado a aplicação do negativo nos três canais de cores RGB gerou um resultado que alterava tanto o brilho quanto a matiz da imagem original.
 
-![Detran_Minas-Gerais(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-rgb).png?raw=true)
+![Detran_Minas-Gerais(negative-rgb).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/Detran_Minas-Gerais(negative-rgb).png?raw=true)
 
 #### Negativo em Y
 
 Já o negativo aplicado apenas no canal Y do sistema YIQ fez com que apenas o brilho seja invertido, mantendo a matiz original da imagem base.
 
-![Detran_Minas-Gerais(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/Detran_Minas-Gerais(negative-y).png?raw=true)
+![Detran_Minas-Gerais(negative-y).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/Detran_Minas-Gerais(negative-y).png?raw=true)
 
 ### Funcionalidade 3
 
 Essa funcionalidade tinha como objetivo testar o método de correlação através de sua aplicação com os filtros da média e sobel. A execução de tais métodos está presente na `main` dentro da função `functionality3` e a imagem escolhida para os testes é aquela que está logo abaixo.
 
-![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
+![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon.png?raw=true)
 
 #### Filtro da Média
 
 O tamanho do filtro escolhido para o teste foi 5x5 e a imagem resultante de sua aplicação foi a mesma, mas com um leve suavização nela como um todo.
 
-![baboon(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(media).png?raw=true)
+![baboon(media).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(media).png?raw=true)
 
 
 #### Filtro de Sobel Horizontal
 
 O filtro aqui utilizado foi aquele descrito na seção Materiais e Métodos cuja máscara está presente dentro do arquivo `mask/sobel horizontal.txt` e seu resultado foi justamente o de destacar as transições de cores (em outras palavras, os contornos) horizontais e as diagonais mais próximas da horizontal. Algo que é possível ressaltar foi a geração de uma linha completamente branca na parte inferior da imagem, sendo isso ocorrido devido ao formata da máscara (onde os números negativos estão na linha inferior) em conjunto com a extensão por zeros, fazendo com que a operação de correlação gerasse o valor máximo nessa região.
 
-![baboon(sobel-horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-horizontal).png?raw=true)
+![baboon(sobel-horizontal).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(sobel-horizontal).png?raw=true)
 
 
 #### Filtro de Sobel Vertical
 
 Já nesse caso a máscara utilizada foi `mask/sobel vertical.txt` e seu resultado foi, de certa forma, complementar ao anterior, já que o destaque aqui foi feito nas bordas verticais e aquelas mais próximas da vertical. Ocorrendo aqui o mesmo comportamento da linha branca na anterior, mas dessa vez ela sendo gerada na extrema esquerda da imagem pois aqui a máscara possui os números negativos na coluna da esquerda.
 
-![baboon(sobel-vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(sobel-vertical).png?raw=true)
+![baboon(sobel-vertical).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(sobel-vertical).png?raw=true)
 
 
 ### Funcionalidade 4
 
 A finalidade dessa funcionalidade foi testar a diferença de desempenho e resultado entre a aplicação do filtro da média de máscara 25x25 com o mesmo filtro de máscara 25x1 seguido pela máscara 1x25. A codificação dela está presente na `main` dentro da função `functionality3` e a imagem original utilizada para testes está logo abaixo.
 
-![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1.png?raw=true)
+![CNN1.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/CNN1.png?raw=true)
 
 #### Máscara 25x25
 
 A operação de correlação aplicada em todas as vizinhanças da imagem nos três canais de cores demorou aproximadamente 178 segundos e a imagem resultante é demonstrada abaixo, sendo ela uma versão muito borrada da original, fazendo com que fique bem nítido nas quinas das figuras geométricas o efeito colateral de deixar áreas quadradas na suavização presente no uso do filtro da média box.
 
-![CNN1(media-25x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media-25x25).png?raw=true)
+![CNN1(media-25x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/CNN1(media-25x25).png?raw=true)
 
 #### Máscara 25x1 seguida por 1x25
 
 Já nesse caso a aplicação de toda a operação foi reduzida para aproximadamente 37 segundos (quase 1/5 do valor no item superior) e a imagem final obteve exatamente o mesmo resultado da anterior, como é possível ver abaixo.
 
-![CNN1(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/CNN1(media-25x1-e-1x25).png?raw=true)
+![CNN1(media-25x1-e-1x25).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/CNN1(media-25x1-e-1x25).png?raw=true)
 
 ### Funcionalidade 5
 O propósito dessa funcionalidade foi aplicar o filtro da mediana e visualizar seu resultado. A imagem escolhida para esse caso foi essa exibida abaixo justamente devido a alta presença das diversas gotas de água em queda na imagem que, ao se assimilarem com ruído salt and pepper, serão impactados devido a aplicação do filtro.
-![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617.jpg?raw=true)
+![2817540617.jpg](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/2817540617.jpg?raw=true)
 
 O método que codifica isso está presente na `main` internamente a função `functionality5` e o tamanho da mediana escolhida foi 10x10, o que resultou na imagem exibida abaixo. Como é possível observar, além do efeito visual de pintura, grande parte das gotas de água foram removidas devido a aplicação do filtro.
 
-![2817540617(mediana).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/2817540617(mediana).png?raw=true)
+![2817540617(mediana).png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/2817540617(mediana).png?raw=true)
 
 ### Funcionalidade 6
 Como já descrito na seção Materiais e Métodos, tal funcionalidade consiste em fazer uma busca por padrão utilizando a Correlação Cruzada Normalizada. A imagem e o padrão requisitados pela especificação para isso são exibidos respectivamente logo abaixo.
 
-![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon.png?raw=true)
+![baboon.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon.png?raw=true)
 
-![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/babooneye.png?raw=true)
+![babooneye.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/babooneye.png?raw=true)
 
 A execução dessa funcionalidade encontra-se dentro da `functionality6` e ela resultou, respectivamente, nos seguintes mapa em tons de cinza das médias das correlações e destacamento da região de maior correlação entre os pixels. 
 
-![baboon(cross-corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-gray-map)recortado.png?raw=true)
+![baboon(cross-corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(cross-corr-gray-map)recortado.png?raw=true)
 
-![baboon(cross-corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(cross-corr-result)recortado.png?raw=true)
+![baboon(cross-corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(cross-corr-result)recortado.png?raw=true)
 
 Como é possível visualizar, a busca pelo padrão obteve o resultado esperado ao encontrar a região do padrão ao mesmo tempo que obteve uma correlação altíssima também no outro olho devido a sua similaridade.
 
 ### Funcionalidade 7
 Já aqui seria necessário fazer a mesma busca utilizando a imagem e o padrão da Funcionalidade anterior, mas dessa vez aplicando a Correlação utilizada na Funcionalidade 3. A codificação está presente dentro da `functionality7` e ela teve como resultado, respectivamente, os seguintes mapa em tons de cinza das médias das correlações e destacamento da região de maior correlação entre os pixels. 
 
-![baboon(corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(corr-gray-map)recortado.png?raw=true)
+![baboon(corr-gray-map)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(corr-gray-map)recortado.png?raw=true)
 
-![baboon(corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/Module%20I/images/baboon(corr-result)recortado.png?raw=true)
+![baboon(corr-result)recortado.png](https://github.com/Drayton80/University-DigitalImageProcessing/blob/main/images/baboon(corr-result)recortado.png?raw=true)
 
 Nesse caso, como a Correlação não foi normalizada em cada vizinhança e na máscara, o resultado obtido não foi a região correta apesar de haver uma grande correlação nos olhos. Sendo isso decorrido do fato em que a média dos cálculos das correlações acabará obtendo valores mais altos em regiões da imagem que possuam valores de RGB maiores, ou seja, aquelas que possuem um brilho maior, o que fica ainda mais evidente observando o mapa em tons de cinza. 
 
